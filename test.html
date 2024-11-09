@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 Robot Control Console</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        #console {
+            width: 80%;
+            height: 200px;
+            background-color: #333;
+            color: #0f0;
+            overflow-y: auto;
+            padding: 10px;
+            margin: 20px auto;
+            border: 1px solid #444;
+            font-family: monospace;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>ESP32 Robot Control Console</h1>
+    <div id="console">Console Output:</div>
+
+    <div class="button-container">
+        <button onclick="sendCommand('forward')">Forward</button>
+        <button onclick="sendCommand('backward')">Backward</button>
+        <button onclick="sendCommand('left')">Left</button>
+        <button onclick="sendCommand('right')">Right</button>
+        <button onclick="sendCommand('stop')">Stop</button>
+    </div>
+
+    <script>
+        // Replace with your ESP32's IP address
+        const ESP32_IP = "ws://192.168.1.84:81/ws";
+        const consoleElement = document.getElementById("console");
+
+        // Initialize WebSocket connection
+        const socket = new WebSocket(ESP32_IP);
+
+        // WebSocket connection opened
+        socket.onopen = function () {
+            logToConsole("Connected to WebSocket at " + ESP32_IP);
+        };
+
+        // WebSocket message received
+        socket.onmessage = function (event) {
+            logToConsole("Message from ESP32: " + event.data);
+        };
+
+        // WebSocket connection closed
+        socket.onclose = function () {
+            logToConsole("Disconnected from WebSocket");
+        };
+
+        // WebSocket error occurred
+        socket.onerror = function (error) {
+            logToConsole("WebSocket Error: " + error);
+        };
+
+        // Send command to ESP32
+        function sendCommand(command) {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(command);
+                logToConsole("Sent command: " + command);
+            } else {
+                logToConsole("WebSocket is not connected.");
+            }
+        }
+
+        // Log messages to the console area
+        function logToConsole(message) {
+            const timeStamp = new Date().toLocaleTimeString();
+            consoleElement.innerHTML += `<p>[${timeStamp}] ${message}</p>`;
+            consoleElement.scrollTop = consoleElement.scrollHeight;  // Auto-scroll to bottom
+        }
+    </script>
+
+</body>
+</html>
