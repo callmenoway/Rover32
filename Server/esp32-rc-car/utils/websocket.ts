@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-//stato per le notifiche WebSocket
+//stato per le notifiche websocket
 interface WebSocketState {
   status: "connected" | "disconnected" | "error";
   message: string;
@@ -16,7 +16,7 @@ export const useWebSocketStore = create<WebSocketState>((set) => ({
 export class WebSocketClient {
   private ws: WebSocket | null = null;
   private ip: string;
-  private isConnected: boolean = false; //per evitare riconnessioni inutili
+  private isConnected: boolean = false; //per evitare riconnessioni inutili come studiare storia
   
   constructor(ip: string) {
     this.ip = ip;
@@ -24,13 +24,13 @@ export class WebSocketClient {
   }
 
   connect() {
-    if (this.isConnected) return; //se è già connesso, non fa nulla
+    if (this.isConnected) return; //se è già connesso non fa nulla
 
     try {
       this.ws = new WebSocket(`ws://${this.ip}:81/wsControl`);
 
       this.ws.onopen = () => {
-        console.log("✅ Connected to ESP32");
+        //console.log("✅ Connected to ESP32");
         if (!this.isConnected) { //gestione solo al primo successo di connessione
           this.isConnected = true;
           useWebSocketStore.getState().setStatus("connected", "✅ Connesso all'ESP32");

@@ -11,8 +11,11 @@
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.2",
     "@radix-ui/react-toggle-group": "^1.1.2",
+    "@react-oauth/google": "^0.12.1",
+    "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "google-auth-library": "^9.15.1",
     "lucide-react": "^0.487.0",
     "next": "15.2.4",
     "react": "^19.0.0",

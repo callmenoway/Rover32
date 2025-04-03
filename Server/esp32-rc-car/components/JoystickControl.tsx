@@ -46,7 +46,7 @@ export default function JoystickControl({ ip }: { ip: string }) {
 
   return (
     <div className="flex flex-col items-center">
-      <h2 className="text-xl font-bold">C</h2>
+      <h2 className="text-xl font-bold">CONTROLLI</h2>
       <Joystick
         size={120}
         baseColor="#eee"
