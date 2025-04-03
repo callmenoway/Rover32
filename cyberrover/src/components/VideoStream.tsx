@@ -19,6 +19,7 @@ const VideoStream: React.FC<VideoStreamProps> = ({ streamUrl }) => {
     setIsError(false);
   };
 
+  
   return (
     <div className="w-full max-w-4xl h-64 bg-gray-900 flex justify-center items-center rounded-md shadow-lg overflow-hidden">
       {isError || !streamUrl ? (

@@ -17,7 +17,7 @@ const JoystickVirtual: React.FC<JoystickVirtualProps> = ({ onMove }) => {
         zone: joystickRef.current,
         mode: 'static', //è statico chill
         position: { left: '50%', top: '50%' }, //posizione nello schermo 360Hz
-        color: 'cyan' //se vuoi cambiare il colore cambialo altrimenti meglio cosi
+        color: 'cyan' //se vuoi cambiare il colore cambialo, altrimenti meglio cosi
       });
 
       manager.on('move', (evt, data) => {
