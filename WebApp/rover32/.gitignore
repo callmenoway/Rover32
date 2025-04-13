@@ -10,6 +10,7 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+package-lock.json
 
 # testing
 /coverage
@@ -24,6 +25,7 @@
 # misc
 .DS_Store
 *.pem
+
 
 # debug
 npm-debug.log*

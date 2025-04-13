@@ -6,6 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardFooter } from "@/components/ui/card";
 import NotLoggedIn from "@/components/NotLoggedIn";
+import { signOut } from "next-auth/react";
+import Link from "next/link";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
 
 export default function ClientHome({ session }: { session: any }) {
     const [ipAddress, setIpAddress] = useState<string>("");
@@ -75,60 +86,89 @@ export default function ClientHome({ session }: { session: any }) {
     }
 
     return (
-        <div
-            className="flex flex-col items-center justify-center min-h-screen bg-gray-50"
-            style={{ backgroundImage: "url('/rover32.png')", backgroundSize: "cover", backgroundPosition: "center" }}
-        >
-            {/* <h2 className="text-2xl">Dashboard - welcome back {session?.user.username}</h2> */}
-            <Card className="w-full max-w-md shadow-lg">
-            <CardHeader>
-                <h1 className="text-2xl font-bold text-center">Rover32</h1>
-            </CardHeader>
-            <div className="p-4">
-                <div className="mb-4">
-                <label className="block mb-2 font-semibold">Indirizzo IP:</label>
-                <Input
-                    type="text"
-                    value={ipAddress}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIpAddress(e.target.value)}
-                    placeholder="Esempio: 192.168.1.100"
-                    className="w-full"
-                />
+        <div className="min-h-screen bg-gray-50" style={{ backgroundImage: "url('/rover32.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
+            {/* Navbar */}
+            <nav className="w-full bg-white shadow-md fixed top-0 left-0 z-10">
+                <div className="container mx-auto flex justify-between items-center px-4 py-2">
+                    <NavigationMenu>
+                        <NavigationMenuList>
+                            <NavigationMenuItem>
+                                <NavigationMenuTrigger>Menu</NavigationMenuTrigger>
+                                <NavigationMenuContent>
+                                    <ul className="p-4">
+                                        <li>
+                                            <NavigationMenuLink asChild>
+                                                <Link href="/" className={navigationMenuTriggerStyle()}>
+                                                    Home
+                                                </Link>
+                                            </NavigationMenuLink>
+                                        </li>
+                                    </ul>
+                                </NavigationMenuContent>
+                            </NavigationMenuItem>
+                        </NavigationMenuList>
+                    </NavigationMenu>
+                    <Button
+                        onClick={() => signOut({ callbackUrl: "/sign-in" })}
+                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
+                    >
+                        Sign Out
+                    </Button>
                 </div>
-                <Button onClick={connectWebSockets} className="w-full">
-                Connetti
-                </Button>
+            </nav>
+
+            {/* Main Content */}
+            <div className="flex flex-col items-center justify-center pt-16">
+                <Card className="w-full max-w-md shadow-lg">
+                    <CardHeader>
+                        <h1 className="text-2xl font-bold text-center">Rover32</h1>
+                    </CardHeader>
+                    <div className="p-4">
+                        <div className="mb-4">
+                            <label className="block mb-2 font-semibold">Indirizzo IP:</label>
+                            <Input
+                                type="text"
+                                value={ipAddress}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIpAddress(e.target.value)}
+                                placeholder="Esempio: 192.168.1.100"
+                                className="w-full"
+                            />
+                        </div>
+                        <Button onClick={connectWebSockets} className="w-full">
+                            Connetti
+                        </Button>
+                    </div>
+                    <CardFooter>
+                        <div className="mb-4">
+                            {cameraFeed ? (
+                                <img src={cameraFeed} alt="Camera Feed" className="rounded shadow w-full" />
+                            ) : (
+                                <p className="text-center text-gray-500">Caricamento camera...</p>
+                            )}
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <Joystick
+                                size={100}
+                                baseColor="#ccc"
+                                stickColor="#333"
+                                move={handleJoystickMove}
+                                stop={handleJoystickStop}
+                            />
+                            <div className="mt-4 flex space-x-2">
+                                <Button onClick={() => sendCommand("go")} className="bg-green-500 hover:bg-green-600">
+                                    Avanti
+                                </Button>
+                                <Button onClick={() => sendCommand("back")} className="bg-red-500 hover:bg-red-600">
+                                    Indietro
+                                </Button>
+                                <Button onClick={() => sendCommand("stop")} className="bg-gray-500 hover:bg-gray-600">
+                                    Stop
+                                </Button>
+                            </div>
+                        </div>
+                    </CardFooter>
+                </Card>
             </div>
-            <CardFooter>
-                <div className="mb-4">
-                {cameraFeed ? (
-                    <img src={cameraFeed} alt="Camera Feed" className="rounded shadow w-full" />
-                ) : (
-                    <p className="text-center text-gray-500">Caricamento camera...</p>
-                )}
-                </div>
-                <div className="flex flex-col items-center">
-                <Joystick
-                    size={100}
-                    baseColor="#ccc"
-                    stickColor="#333"
-                    move={handleJoystickMove}
-                    stop={handleJoystickStop}
-                />
-                <div className="mt-4 flex space-x-2">
-                    <Button onClick={() => sendCommand("go")} className="bg-green-500 hover:bg-green-600">
-                    Avanti
-                    </Button>
-                    <Button onClick={() => sendCommand("back")} className="bg-red-500 hover:bg-red-600">
-                    Indietro
-                    </Button>
-                    <Button onClick={() => sendCommand("stop")} className="bg-gray-500 hover:bg-gray-600">
-                    Stop
-                    </Button>
-                </div>
-                </div>
-            </CardFooter>
-            </Card>
         </div>
     );
 }

@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import GoogleSignInButton from '../GoogleSignInButton';
+import GithubSignInButton from '../GithubSignInButton';
 import { useRouter } from 'next/navigation';
 import {
   Card,
@@ -123,6 +124,7 @@ const SignUpForm = () => {
             </div>
 
             <GoogleSignInButton>Sign up with Google</GoogleSignInButton>
+            <GithubSignInButton>Sign up with GitHub</GithubSignInButton>
 
             <p className="text-center text-sm text-gray-600 mt-2">
               Already have an account?&nbsp;

@@ -7,15 +7,11 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import GoogleSignInButton from '../GoogleSignInButton';
+import GithubSignInButton from '../GithubSignInButton';
 import { signIn } from 'next-auth/react';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from '@/components/ui/card';
 import { useRouter } from 'next/navigation';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { toast } from 'react-hot-toast'; // Importa react-hot-toast
 
 const FormSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email'),
@@ -26,26 +22,34 @@ const FormSchema = z.object({
 });
 
 const SignInForm = () => {
-    const router = useRouter();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    const signInData = await signIn('credentials', {
+    try {
+      const signInData = await signIn('credentials', {
         email: data.email,
         password: data.password,
         redirect: false,
-    });
-    
-    if(signInData?.error) {
-        console.log(signInData.error);
-    } else{
+      });
+
+      if (signInData?.error) {
+        toast.error(signInData.error); // Mostra una notifica di errore
+        setValue('password', ''); // Cancella la password dalla textbox
+      } else {
+        toast.success('Login successful! Redirecting to dashboard...'); // Mostra una notifica di successo
         router.push('/dashboard');
+      }
+    } catch (error) {
+      console.error("An unexpected error occurred:", error);
+      toast.error('An unexpected error occurred. Please try again.'); // Mostra una notifica di errore generico
     }
   };
 
@@ -85,6 +89,7 @@ const SignInForm = () => {
             </div>
 
             <GoogleSignInButton>Sign in with Google</GoogleSignInButton>
+            <GithubSignInButton>Sign in with GitHub</GithubSignInButton>
 
             <p className="text-center text-sm text-gray-600 mt-2">
               Don&apos;t have an account?&nbsp;
