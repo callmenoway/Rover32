@@ -5,10 +5,14 @@ import { signIn } from "next-auth/react";
 
 interface GoogleSignInButtonProps {
   children: ReactNode;
+  onClick?: () => void; // Add optional onClick prop
 }
 
-const GoogleSignInButton: FC<GoogleSignInButtonProps> = ({ children }) => {
-  const loginWithGoogle = () => signIn("google");
+const GoogleSignInButton: FC<GoogleSignInButtonProps> = ({ children, onClick }) => {
+  const loginWithGoogle = async () => {
+    if (onClick) await onClick(); // Call onClick if provided
+    await signIn("google");
+  };
 
   return (
     <Button onClick={loginWithGoogle} className="w-full flex items-center space-x-2">

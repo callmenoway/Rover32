@@ -93,25 +93,14 @@ export default function ClientHome({ session }: { session: any }) {
                     <NavigationMenu>
                         <NavigationMenuList>
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger>Menu</NavigationMenuTrigger>
-                                <NavigationMenuContent>
-                                    <ul className="p-4">
-                                        <li>
-                                            <NavigationMenuLink asChild>
-                                                <Link href="/" className={navigationMenuTriggerStyle()}>
-                                                    Home
-                                                </Link>
-                                            </NavigationMenuLink>
-                                        </li>
-                                    </ul>
-                                </NavigationMenuContent>
+                            <Link href="/" className={navigationMenuTriggerStyle()}>
+                                Home
+                            </Link>
                             </NavigationMenuItem>
                         </NavigationMenuList>
                     </NavigationMenu>
-                    <Button
-                        onClick={() => signOut({ callbackUrl: "/sign-in" })}
-                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
-                    >
+                    <Button onClick={() => signOut({ callbackUrl: "/sign-in" })}
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md">
                         Sign Out
                     </Button>
                 </div>
@@ -130,7 +119,7 @@ export default function ClientHome({ session }: { session: any }) {
                                 type="text"
                                 value={ipAddress}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIpAddress(e.target.value)}
-                                placeholder="Esempio: 192.168.1.100"
+                                placeholder="Esempio: 192.168.1.1"
                                 className="w-full"
                             />
                         </div>
