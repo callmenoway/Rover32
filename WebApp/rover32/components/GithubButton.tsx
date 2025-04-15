@@ -3,12 +3,12 @@ import { Button } from "./ui/button";
 import { FaGithub } from "react-icons/fa";
 import { signIn } from "next-auth/react";
 
-interface GithubSignInButtonProps {
+interface GithubButtonProps {
   children: ReactNode;
   onClick?: () => void; // Add optional onClick prop
 }
 
-const GithubSignInButton: FC<GithubSignInButtonProps> = ({ children, onClick }) => {
+const GithubButton: FC<GithubButtonProps> = ({ children, onClick }) => {
   const loginWithGithub = async () => {
     if (onClick) await onClick(); // Call onClick if provided
     await signIn("github");
@@ -22,4 +22,4 @@ const GithubSignInButton: FC<GithubSignInButtonProps> = ({ children, onClick }) 
   );
 };
 
-export default GithubSignInButton;
+export default GithubButton;

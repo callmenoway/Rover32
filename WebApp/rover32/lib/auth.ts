@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
+import DiscordProvider from "next-auth/providers/discord";
 import { db } from "./db";
 import { compare } from "bcrypt";
 import * as z from "zod";
@@ -52,6 +53,10 @@ export const authOptions: NextAuthOptions = {
             clientId: process.env.GITHUB_ID as string,
             clientSecret: process.env.GITHUB_SECRET as string,
         }),
+        DiscordProvider({
+            clientId: process.env.DISCORD_CLIENT_ID as string,
+            clientSecret: process.env.DISCORD_CLIENT_SECRET as string
+        }),
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
@@ -86,7 +91,7 @@ export const authOptions: NextAuthOptions = {
         })
     ],
     callbacks: {
-        async jwt({ token, user, account }) {
+        async jwt({ token, user }) {
             if (user) {
                 token.id = user.id;
                 token.username = user.username;
@@ -101,7 +106,49 @@ export const authOptions: NextAuthOptions = {
             };
             return session;
         },
-        async signIn() {
+        async signIn({ user, account, profile }) {
+            if (account?.provider && user) {
+                const existingAccount = await db.account.findFirst({
+                    where: {
+                        provider: account.provider,
+                        providerAccountId: account.providerAccountId,
+                    },
+                });
+
+                if (!existingAccount) {
+                    // Check if a user with the same email already exists
+                    let existingUser = await db.user.findUnique({
+                        where: { email: profile?.email || "" },
+                    });
+
+                    if (!existingUser) {
+                        // Create a new user if no user with the same email exists
+                        const username = profile?.name?.split(" ").join("_").toLowerCase() ?? 
+                                         profile?.email?.split("@")[0] ?? 
+                                         "user_" + Math.random().toString(36).substring(2, 10);
+
+                        existingUser = await db.user.create({
+                            data: {
+                                email: profile?.email || "",
+                                username,
+                                password: "", // Default password for OAuth users
+                            },
+                        });
+                    }
+
+                    // Link the new or existing user to the account
+                    await db.account.create({
+                        data: {
+                            userId: existingUser.id,
+                            provider: account.provider,
+                            providerAccountId: account.providerAccountId,
+                            type: account.type,
+                            access_token: account.access_token || null,
+                            expires_at: account.expires_at || null,
+                        },
+                    });
+                }
+            }
             return true;
         },
         async redirect({ url, baseUrl }) {

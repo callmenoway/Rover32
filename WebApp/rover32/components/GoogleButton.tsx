@@ -3,12 +3,12 @@ import { Button } from "./ui/button";
 import { FaGoogle } from "react-icons/fa";
 import { signIn } from "next-auth/react";
 
-interface GoogleSignInButtonProps {
+interface GoogleButtonProps {
   children: ReactNode;
   onClick?: () => void; // Add optional onClick prop
 }
 
-const GoogleSignInButton: FC<GoogleSignInButtonProps> = ({ children, onClick }) => {
+const GoogleButton: FC<GoogleButtonProps> = ({ children, onClick }) => {
   const loginWithGoogle = async () => {
     if (onClick) await onClick(); // Call onClick if provided
     await signIn("google");
@@ -22,4 +22,4 @@ const GoogleSignInButton: FC<GoogleSignInButtonProps> = ({ children, onClick }) 
   );
 };
 
-export default GoogleSignInButton;
+export default GoogleButton;

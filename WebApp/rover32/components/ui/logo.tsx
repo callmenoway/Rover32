@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import logo from "@/public/rover32logo.png"
+import logo from "@/public/trasparent-logo.png"
 
 import dynamic from "next/dynamic";
 
@@ -11,8 +11,8 @@ const Logo = dynamic(() => Promise.resolve(() => {
             <Image
                 src={logo}
                 alt="Rover32 Logo"
-                width={32}
-                height={32}
+                width={256}
+                height={256}
             />
         </div>
     </div>

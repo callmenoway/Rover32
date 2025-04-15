@@ -6,8 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import GoogleSignInButton from '../GoogleSignInButton';
-import GithubSignInButton from '../GithubSignInButton';
+import GoogleSignInButton from '../GoogleButton';
+import GithubSignInButton from '../GithubButton';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader,CardTitle,CardDescription } from '@/components/ui/card';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
@@ -67,7 +67,7 @@ const SignUpForm = () => {
   } = form;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted px-4" style={{ backgroundImage: "url('https://www.itl.cat/pngfile/big/29-291410_hd-16-night-sky-background-with-moon.jpg')", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}>
+    <div className="min-h-screen flex items-center justify-center bg-muted px-4" style={{ backgroundImage: `url('/bg.jpg')`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}>
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">Create an account</CardTitle>

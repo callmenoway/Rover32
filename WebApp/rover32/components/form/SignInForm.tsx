@@ -6,8 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import GoogleSignInButton from '../GoogleSignInButton';
-import GithubSignInButton from '../GithubSignInButton';
+import GoogleButton from '../GoogleButton';
+import GithubButton from '../GithubButton';
+import DiscordButton from '../DiscordButton';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -69,7 +70,7 @@ const SignInForm = () => {
   // };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted px-4" style={{ backgroundImage: "url('https://www.itl.cat/pngfile/big/29-291410_hd-16-night-sky-background-with-moon.jpg')", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}>
+    <div className="min-h-screen flex items-center justify-center bg-muted px-4" style={{ backgroundImage: `url('/bg.jpg')`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}>
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">Welcome back</CardTitle>
@@ -118,12 +119,15 @@ const SignInForm = () => {
             </div>
 
             {/* onClick={() => handleThirdPartyLogin('google')} */}
-            <GoogleSignInButton> 
+            <GoogleButton>
               Sign in with Google
-            </GoogleSignInButton>
-            <GithubSignInButton>
+            </GoogleButton>
+            <GithubButton>
               Sign in with GitHub
-            </GithubSignInButton>
+            </GithubButton>
+            <DiscordButton>
+              Sign in with Discord
+            </DiscordButton>
 
             <p className="text-center text-sm text-gray-600 mt-2">
               Don&apos;t have an account?&nbsp;

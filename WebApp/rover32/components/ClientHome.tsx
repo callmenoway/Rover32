@@ -86,7 +86,7 @@ export default function ClientHome({ session }: { session: any }) {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50" style={{ backgroundImage: "url('/rover32.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
+        <div className="min-h-screen bg-gray-50" style={{ backgroundImage: "url('/trasparent-logo.png')", backgroundSize: "cover", backgroundPosition: "left" }}>
             {/* Navbar */}
             <nav className="w-full bg-white shadow-md fixed top-0 left-0 z-10">
                 <div className="container mx-auto flex justify-between items-center px-4 py-2">
