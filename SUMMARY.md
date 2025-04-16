@@ -6,3 +6,4 @@
 
 * [Techstack](web-app/techstack/README.md)
   * [Core Framework](web-app/techstack/core-framework.md)
+  * [Frontend](web-app/techstack/frontend.md)

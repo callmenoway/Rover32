@@ -15,3 +15,5 @@ Next.js serves as the foundation of the application, providing a robust React fr
 * Nested Layouts: Improves performance because if you are using same components in more pages, it render only one time instead of rendering every time the entire page
 * Caching: With server-side rendering Next.Js implements caching from the server side. This help a lot because the user can't modify what is cached so it also improve security
 
+You can find all this optimized feautures at [Next.Js Docs](https://nextjs.org/docs/pages/building-your-application/optimizing).
+
