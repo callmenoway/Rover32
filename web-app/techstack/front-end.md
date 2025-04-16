@@ -1,4 +1,8 @@
-# Frontend
+---
+icon: desktop
+---
+
+# Front-End
 
 [React (v19.0.0)](https://react.dev/)
 
