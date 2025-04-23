@@ -9,30 +9,30 @@ datasource db {
 }
 
 model User {
-  id              String    @id @default(cuid())
-  username        String    @unique
-  email           String    @unique
-  emailVerified   DateTime?
-  image           String?
-  password        String
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  accounts        Account[]
+  username  String
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  email     String    @unique
+  id        String    @id @default(cuid())
+  accounts  Account[]
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  provider          String
+  providerAccountId String
+  type              String
+  access_token      String? @map("accessToken")
+  expires_at        Int?
+  refresh_token     String? @db.Text
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  token_type        String? @map("tokenType")
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@map("Account")
 }
