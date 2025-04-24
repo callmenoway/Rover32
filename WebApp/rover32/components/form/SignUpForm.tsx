@@ -9,7 +9,7 @@ import Link from 'next/link';
 import GoogleSignInButton from '../GoogleButton';
 import GithubSignInButton from '../GithubButton';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader,CardTitle,CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 
 const FormSchema = z
@@ -67,26 +67,45 @@ const SignUpForm = () => {
   } = form;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted px-4" style={{ backgroundImage: `url('/bg.jpg')`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}>
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-muted px-4 relative">
+      <video
+        id="background-video"
+        loop
+        autoPlay
+        muted
+        playsInline
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          // zIndex: -1, // Ensure the video is behind everything
+        }}
+      >
+        <source src="/muci.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <Card className="w-full max-w-md z-10"> {/* Ensure the card is above the video */}
         <CardHeader>
           <CardTitle className="text-2xl">Create an account</CardTitle>
           <CardDescription>Enter your details below to sign up</CardDescription>
         </CardHeader>
         <CardContent>
-        <nav className="w-full fixed top-0 left-0 z-10 bg-black shadow-md">
-        <div className="container mx-auto flex justify-between items-center px-4 py-2">
-          <NavigationMenu>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <Link href="/" className={navigationMenuTriggerStyle()}>
-          Home
-            </Link>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-          </NavigationMenu>
-        </div>
-      </nav>
+          <nav className="w-full fixed top-0 left-0 z-20 bg-black shadow-md" style={{backgroundColor: 'transparent'}}> {/* Ensure the nav is above the video */}
+            <div className="container mx-auto flex justify-between items-center px-4 py-2">
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <Link href="/" className={navigationMenuTriggerStyle()}>
+                      Home
+                    </Link>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+            </div>
+          </nav>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
