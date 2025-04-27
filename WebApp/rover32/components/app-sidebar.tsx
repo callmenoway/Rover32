@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, Layers, KeyRound, FileSearch, FileCode2, Cpu, Microchip, MonitorSmartphone, ServerCog, Database, Braces, ChevronDown, ChevronRight } from "lucide-react"
+import { Home, Layers, KeyRound, FileSearch, FileCode2, Cpu, Microchip, MonitorSmartphone, ServerCog, Database, Braces, ChevronDown, ChevronRight, Sun, Moon } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -10,9 +10,12 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarFooter,
 } from "@/components/ui/sidebar"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { useState } from "react"
+import { useTheme } from "@/hooks/use-theme"
+import { Button } from "@/components/ui/button"
 
 // Menu items.
 const items = [
@@ -51,6 +54,7 @@ const items = [
 
 export function AppSidebar() {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+  const { theme, toggleTheme } = useTheme();
 
   const toggleSection = (title: string) => {
     setOpenSections(prev => ({
@@ -106,6 +110,19 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      
+      <SidebarFooter className="px-2">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={toggleTheme}
+          className="ml-auto"
+          title={theme === 'light' ? 'Passa alla modalità scura' : 'Passa alla modalità chiara'}
+        >
+          {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+          <span className="sr-only">Cambia tema</span>
+        </Button>
+      </SidebarFooter>
     </Sidebar>
   )
 }

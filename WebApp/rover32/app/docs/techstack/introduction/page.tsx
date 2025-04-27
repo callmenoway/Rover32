@@ -1,7 +1,7 @@
 import React from 'react';
-import { 
-    Card, 
-    CardContent 
+import {
+    Card,
+    CardContent
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CodeIcon, ServerIcon, ShieldIcon, Database, MonitorIcon } from "lucide-react";
