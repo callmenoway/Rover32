@@ -81,19 +81,18 @@ const SignUpForm = () => {
           width: '100%',
           height: '100%',
           objectFit: 'cover',
-          // zIndex: -1, // Ensure the video is behind everything
         }}
       >
         <source src="/muci.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-      <Card className="w-full max-w-md z-10"> {/* Ensure the card is above the video */}
+      <Card className="w-full max-w-md z-10">
         <CardHeader>
           <CardTitle className="text-2xl">Create an account</CardTitle>
           <CardDescription>Enter your details below to sign up</CardDescription>
         </CardHeader>
         <CardContent>
-          <nav className="w-full fixed top-0 left-0 z-20 bg-black shadow-md" style={{backgroundColor: 'transparent'}}> {/* Ensure the nav is above the video */}
+          <nav className="w-full fixed top-0 left-0 z-20 bg-black shadow-md" style={{backgroundColor: 'transparent'}}>
             <div className="container mx-auto flex justify-between items-center px-4 py-2">
               <NavigationMenu>
                 <NavigationMenuList>

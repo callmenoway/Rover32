@@ -1,22 +1,9 @@
-import Image from "next/image"
-import Link from "next/link"
-import logo from "@/public/trasparent-logo.png"
+import { CarFront } from "lucide-react";
 
-import dynamic from "next/dynamic";
-
-const Logo = dynamic(() => Promise.resolve(() => {
+export function Logo() {
   return (
-    <div className="flex items-center space-x-2">
-        <div onClick={() => window.location.href = "/"}>
-            <Image
-                src={logo}
-                alt="Rover32 Logo"
-                width={256}
-                height={256}
-            />
-        </div>
+    <div className="rounded-lg bg-slate-900 p-2 w-10 h-10 flex items-center justify-center">
+      <CarFront className="h-5 w-5 text-white" />
     </div>
   );
-}), { ssr: false });
-
-export { Logo };
+}

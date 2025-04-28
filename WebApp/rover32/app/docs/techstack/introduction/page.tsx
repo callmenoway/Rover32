@@ -1,3 +1,4 @@
+//? Importazioni di React e componenti UI
 import React from 'react';
 import {
     Card,
@@ -6,10 +7,12 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CodeIcon, ServerIcon, ShieldIcon, Database, MonitorIcon } from "lucide-react";
 
+//? Componente principale della pagina di introduzione al tech stack
 export default function TechStackIntroduction() {
     return (
         <div className="container mx-auto py-10 px-4 md:px-6">
             <div className="max-w-5xl mx-auto">
+                {/* Intestazione della pagina */}
                 <div className="space-y-4 text-center mb-12">
                     <div className="inline-block p-2 bg-primary/10 rounded-full">
                         <CodeIcon className="h-10 w-10 text-primary" />
@@ -20,6 +23,7 @@ export default function TechStackIntroduction() {
                     </p>
                 </div>
 
+                {/* Card introduttiva */}
                 <Card className="mb-8">
                     <CardContent className="p-6">
                         <p className="text-lg mb-4">
@@ -35,22 +39,30 @@ export default function TechStackIntroduction() {
                     </CardContent>
                 </Card>
 
+                {/* Griglia delle sezioni tecnologiche principali */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
+                    {/* Card Backend */}
                     <Card className="p-4 text-center hover:shadow-md transition-all">
                         <ServerIcon className="h-8 w-8 mx-auto mb-2 text-primary" />
                         <h3 className="font-medium">Backend</h3>
                         <p className="text-sm text-muted-foreground">Server technologies</p>
                     </Card>
+                    
+                    {/* Card Frontend */}
                     <Card className="p-4 text-center hover:shadow-md transition-all">
                         <MonitorIcon className="h-8 w-8 mx-auto mb-2 text-primary" />
                         <h3 className="font-medium">Frontend</h3>
                         <p className="text-sm text-muted-foreground">UI technologies</p>
                     </Card>
+                    
+                    {/* Card ORM */}
                     <Card className="p-4 text-center hover:shadow-md transition-all">
                         <Database className="h-8 w-8 mx-auto mb-2 text-primary" />
                         <h3 className="font-medium">ORM</h3>
                         <p className="text-sm text-muted-foreground">Database technology</p>
                     </Card>
+                    
+                    {/* Card Authentication */}
                     <Card className="p-4 text-center hover:shadow-md transition-all">
                         <ShieldIcon className="h-8 w-8 mx-auto mb-2 text-primary" />
                         <h3 className="font-medium">Authentication</h3>
@@ -61,3 +73,7 @@ export default function TechStackIntroduction() {
         </div>
     );
 }
+
+//TODO Aggiungere tabelle comparative con altre tecnologie simili
+//TODO Integrare diagrammi esplicativi dell'architettura
+//TODO Aggiungere sezione performance e sicurezza

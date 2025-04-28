@@ -1,5 +1,6 @@
 "use client"
 
+//? Importazioni delle icone e componenti
 import { Home, Layers, KeyRound, FileSearch, FileCode2, Cpu, Microchip, MonitorSmartphone, ServerCog, Database, Braces, ChevronDown, ChevronRight, Sun, Moon } from "lucide-react"
 import {
   Sidebar,
@@ -17,7 +18,7 @@ import { useState } from "react"
 import { useTheme } from "@/hooks/use-theme"
 import { Button } from "@/components/ui/button"
 
-// Menu items.
+//? Definizione delle voci di menu della sidebar
 const items = [
   {
     title: "Home",
@@ -52,10 +53,14 @@ const items = [
   },
 ]
 
+//? Componente principale per la sidebar dell'applicazione
 export function AppSidebar() {
+  //? Stato per tenere traccia delle sezioni aperte/chiuse
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+  //? Hook per gestire il tema (chiaro/scuro)
   const { theme, toggleTheme } = useTheme();
 
+  //? Funzione per aprire/chiudere una sezione
   const toggleSection = (title: string) => {
     setOpenSections(prev => ({
       ...prev,
@@ -73,6 +78,7 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   {!item.subItems ? (
+                    //? Voce di menu senza sottomenu
                     <SidebarMenuButton asChild>
                       <a href={item.url}>
                         <item.icon />
@@ -80,6 +86,7 @@ export function AppSidebar() {
                       </a>
                     </SidebarMenuButton>
                   ) : (
+                    //? Voce di menu con sottomenu collassabile
                     <Collapsible
                       open={openSections[item.title]}
                       onOpenChange={() => toggleSection(item.title)}
@@ -110,11 +117,11 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      
+
       <SidebarFooter className="px-2">
-        <Button 
-          variant="ghost" 
-          size="icon" 
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={toggleTheme}
           className="ml-auto"
           title={theme === 'light' ? 'Passa alla modalità scura' : 'Passa alla modalità chiara'}

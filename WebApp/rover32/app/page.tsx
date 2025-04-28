@@ -1,34 +1,44 @@
 "use client"
 
+//? Importazioni da librerie e componenti
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
-import { Logo } from "@/components/ui/logo" // assicurati di avere questa o rimuoviamo il logo
+import { Logo } from "@/components/ui/logo"
+import { LogOut } from "lucide-react"
 import * as React from "react"
+import { useSession, SessionProvider, signOut } from "next-auth/react"
 
+//? Dati dei componenti mostrati nel menu di navigazione
 const components = [
   {
     title: "Control Interface",
-    href: "/dashboard",
+    href: "/vehicles",
     description: "Drive and steer your ESP32 Rover in real-time from the browser.",
   },
   {
     title: "Live Camera",
-    href: "/dashboard",
+    href: "/vehicles",
     description: "View the rover's onboard live camera feed.",
   },
   {
     title: "Custom Commands",
-    href: "/dashboard",
+    href: "/vehicles",
     description: "Send low-level commands directly to the ESP32 board.",
   },
 ]
 
-export default function HomePage() {
+//? Componente wrapper che utilizza il SessionProvider
+function HomeContent() {
+  //? Ottiene lo stato della sessione utente
+  const { data: session, status } = useSession()
+  const isLoading = status === "loading"
+  const isAuthenticated = status === "authenticated"
+
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-white">
-      <nav className="border-b shadow-sm px-4 py-2 bg-white">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <nav className="border-b shadow-sm px-4 py-2 bg-white dark:bg-gray-950 flex justify-between items-center">
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -63,6 +73,7 @@ export default function HomePage() {
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
+
             <NavigationMenuItem>
               <NavigationMenuTrigger>Components</NavigationMenuTrigger>
               <NavigationMenuContent>
@@ -79,6 +90,7 @@ export default function HomePage() {
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
+
             <NavigationMenuItem>
               <Link href="/docs" className={navigationMenuTriggerStyle()}>
                 Documentation
@@ -87,31 +99,66 @@ export default function HomePage() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        {/* Sign In Button */}
-        <div className="ml-auto mt-2 md:mt-0 md:absolute right-4 top-2">
-          <Link href="/api/auth/signin">
-            <Button variant="outline">Sign In</Button>
-          </Link>
+        <div className="flex items-center gap-2">
+          {isLoading ? (
+            //? Stato di caricamento della sessione
+            <Button variant="outline" disabled>Loading...</Button>
+          ) : isAuthenticated ? (
+            //? Utente autenticato: mostra pulsanti per gestire veicoli e logout
+            <>
+              <Link href="/vehicles">
+                <Button variant="outline">Manage Vehicles</Button>
+              </Link>
+              <Button
+                variant="outline"
+                className="flex items-center gap-1"
+                onClick={() => signOut({ callbackUrl: '/' })}
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
+              </Button>
+            </>
+          ) : (
+            //? Utente non autenticato: mostra pulsante di login
+            <Link href="/sign-in">
+              <Button variant="outline">Sign In</Button>
+            </Link>
+          )}
         </div>
       </nav>
 
-      {/* Hero Section */}
+      {/* Sezione Hero principale */}
       <main className="flex flex-col flex-1 items-center justify-center text-center px-4 py-20">
         <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-400">
           Rover32
         </h1>
-        <p className="max-w-xl text-lg text-gray-600 mb-8">
+        <p className="max-w-xl text-lg text-gray-600 dark:text-gray-300 mb-8">
           Control your ESP32 S3 CAM powered rover directly from your browser. Real-time camera feed, joystick control, and much more!
         </p>
-        <Link href="/dashboard">
-          <Button size="lg">Go to Dashboard</Button>
-        </Link>
+        {isAuthenticated ? (
+          //? Pulsante principale per utenti autenticati
+          <Link href="/vehicles">
+            <Button size="lg">Manage Vehicles</Button>
+          </Link>
+        ) : (
+          //? Pulsante principale per nuovi utenti
+          <Link href="/sign-in">
+            <Button size="lg">Get Started</Button>
+          </Link>
+        )}
       </main>
     </div>
   )
 }
 
-// Utility ListItem for NavigationMenu
+export default function HomePage() {
+  return (
+    <SessionProvider>
+      <HomeContent />
+    </SessionProvider>
+  )
+}
+
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
   React.ComponentPropsWithoutRef<"a">

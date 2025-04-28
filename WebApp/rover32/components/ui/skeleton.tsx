@@ -1,13 +1,22 @@
 import { cn } from "@/lib/utils"
 
-function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+  className?: string;
+}
+
+function Skeleton({
+  className,
+  ...props
+}: SkeletonProps) {
   return (
     <div
-      data-slot="skeleton"
-      className={cn("bg-accent animate-pulse rounded-md", className)}
+      className={cn("animate-pulse rounded-md bg-muted", className)}
       {...props}
     />
   )
 }
 
 export { Skeleton }
+
+//TODO Aggiungere varianti per diversi tipi di contenuto (testo, avatar, immagine)
+//TODO Implementare durata e ritardo dell'animazione personalizzabili
