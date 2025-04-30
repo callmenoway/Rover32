@@ -1,38 +1,87 @@
+//? Configurazione del generatore Prisma Client
 generator client {
   provider = "prisma-client-js"
 }
 
+//? Configurazione della fonte di dati PostgreSQL
 datasource db {
   provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  url       = env("DATABASE_URL")   // URL completo per la connessione, può includere pooling
+  directUrl = env("DIRECT_URL")     // URL diretto per operazioni che richiedono una connessione diretta
 }
 
+//? Modello User per gestire gli utenti dell'applicazione
 model User {
-  username  String
-  password  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  email     String    @unique
-  id        String    @id @default(cuid())
-  accounts  Account[]
+  id            String    @id @default(cuid())      // ID univoco, generato usando cuid
+  username      String?                             // Username opzionale dell'utente
+  email         String    @unique                   // Email univoca dell'utente, usata per il login
+  emailVerified DateTime?                           // Timestamp di verifica dell'email
+  password      String                              // Password hashata dell'utente
+  accounts      Account[]                           // Relazione agli account di autenticazione esterni
+  sessions      Session[]                           // Relazione alle sessioni attive dell'utente
+  vehicles      Vehicle[]                           // Relazione ai veicoli posseduti dall'utente
+  createdAt     DateTime  @default(now())           // Timestamp di creazione dell'account
+  updatedAt     DateTime  @updatedAt                // Timestamp dell'ultimo aggiornamento
 }
 
+//? Modello Account per autenticazione esterna (Google, GitHub, ecc.)
 model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  provider          String
-  providerAccountId String
-  type              String
-  access_token      String? @map("accessToken")
-  expires_at        Int?
-  refresh_token     String? @db.Text
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
-  token_type        String? @map("tokenType")
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())    // ID univoco dell'account
+  userId            String                          // ID dell'utente a cui appartiene l'account
+  provider          String                          // Provider di autenticazione (Google, GitHub, ecc.)
+  providerAccountId String                          // ID univoco fornito dal provider
+  type              String                          // Tipo di account (OAuth, email/password, ecc.)
+  access_token      String? @map("accessToken")     // Token di accesso
+  expires_at        Int?                            // Timestamp di scadenza del token
+  refresh_token     String? @db.Text                // Token di aggiornamento per rinnovare l'accesso
+  scope             String?                         // Ambiti di autorizzazione
+  id_token          String? @db.Text                // Token ID per l'autenticazione
+  session_state     String?                         // Stato della sessione
+  token_type        String? @map("tokenType")       // Tipo di token
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade) // Relazione all'utente
 
-  @@unique([provider, providerAccountId])
-  @@map("Account")
+  //? Indici e vincoli
+  @@unique([provider, providerAccountId])           // L'account deve essere univoco per provider
+  @@map("Account")                                  // Nome della tabella nel DB
+  @@index([userId])                                 // Indice sulla colonna userId per prestazioni
 }
+
+//? Modello Session per gestire le sessioni dell'utente
+model Session {
+  id           String   @id @default(cuid())        // ID univoco della sessione
+  sessionToken String   @unique                     // Token di sessione univoco
+  userId       String                               // ID dell'utente a cui appartiene la sessione
+  expires      DateTime                             // Timestamp di scadenza della sessione
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade) // Relazione all'utente
+
+  //? Indici
+  @@index([userId])                                 // Indice sulla colonna userId per prestazioni
+}
+
+//? Modello VerificationToken per la verifica dell'email e recupero password
+model VerificationToken {
+  identifier String                                 // Identificatore (di solito l'email dell'utente)
+  token      String   @unique                       // Token univoco per la verifica
+  expires    DateTime                               // Timestamp di scadenza del token
+
+  //? Vincoli
+  @@unique([identifier, token])                     // La combinazione di identificatore e token deve essere unica
+}
+
+//? Modello Vehicle per gestire i veicoli degli utenti
+model Vehicle {
+  id          String   @id @default(cuid())         // ID univoco del veicolo
+  name        String                                // Nome personalizzato del veicolo
+  ipAddress   String                                // Indirizzo IP per la connessione al veicolo
+  userId      String                                // ID dell'utente proprietario del veicolo
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade) // Relazione all'utente
+  createdAt   DateTime @default(now())              // Timestamp di creazione del veicolo
+  updatedAt   DateTime @updatedAt                   // Timestamp dell'ultimo aggiornamento
+
+  //? Indici
+  @@index([userId])                                 // Indice sulla colonna userId per prestazioni
+}
+
+//TODO Aggiungere modello per la configurazione di veicoli
+//TODO Aggiungere modello per salvare la telemetria dei veicoli
+//TODO Aggiungere modello per comandi personalizzati

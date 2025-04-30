@@ -16,6 +16,7 @@ import { toast } from 'react-hot-toast';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { useState } from 'react';
 
+//? Schema di validazione per il form di login
 const FormSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email'),
   password: z
@@ -24,10 +25,12 @@ const FormSchema = z.object({
     .min(8, 'Password must have at least 8 characters'),
 });
 
-const SignInForm = () => {
+//? Componente principale del form di login
+export function SignInForm() {
   const router = useRouter();
   const [isThirdPartyLogin, setIsThirdPartyLogin] = useState(false);
 
+  //? Configurazione del form con react-hook-form e validazione zod
   const {
     register,
     handleSubmit,
@@ -38,7 +41,9 @@ const SignInForm = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    //? Evita l'invio se è in corso un login con provider
     if (isThirdPartyLogin) return;
+    
     try {
       const signInData = await signIn('credentials', {
         email: data.email,
@@ -50,10 +55,12 @@ const SignInForm = () => {
         toast.error(signInData.error);
         setValue('password', '');
       } else {
+        //? Login riuscito, reindirizza alla dashboard
         toast.success('Login successful! Redirecting...');
-        router.push('/dashboard');
+        router.push('/vehicles');
       }
     } catch (error) {
+      //! Gestione degli errori inaspettati
       console.error("Unexpected error:", error);
       toast.error('Unexpected error, try again.');
     }
@@ -61,7 +68,6 @@ const SignInForm = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted px-4 relative">
-      {/* 🎬 Background Video */}
       <video
         id="background-video"
         loop
@@ -75,35 +81,32 @@ const SignInForm = () => {
           width: '100%',
           height: '100%',
           objectFit: 'cover',
-          // zIndex: -1, // 👈 questo lo mette dietro a tutto
         }}
       >
         <source src="/muci.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-
-      {/* 🔝 Navbar fuori dal Card e trasparente */}
-      <nav className="w-full fixed top-0 left-0 z-20 shadow-md" style={{ backgroundColor: 'transparent' }}>
-        <div className="container mx-auto flex justify-between items-center px-4 py-2">
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <Link href="/" className={navigationMenuTriggerStyle()}>
-                  Home
-                </Link>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        </div>
-      </nav>
-
-      {/* 🧾 Card sopra il video */}
+      
       <Card className="w-full max-w-md z-10">
         <CardHeader>
           <CardTitle className="text-2xl">Welcome back</CardTitle>
           <CardDescription>Sign in to your account</CardDescription>
         </CardHeader>
         <CardContent>
+          <nav className="w-full fixed top-0 left-0 z-20 shadow-md" style={{backgroundColor: 'transparent'}}>
+            <div className="container mx-auto flex justify-between items-center px-4 py-2">
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <Link href="/" className={navigationMenuTriggerStyle()}>
+                      Home
+                    </Link>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+            </div>
+          </nav>
+          
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <Input placeholder="Email" {...register('email')} disabled={isThirdPartyLogin} />
@@ -147,6 +150,6 @@ const SignInForm = () => {
       </Card>
     </div>
   );
-};
+}
 
-export default SignInForm;
+//TODO Implementare reCAPTCHA per prevenire attacchi di forza bruta

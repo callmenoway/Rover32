@@ -1,36 +1,30 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+//? Importazione del font Inter da Google Fonts
+import { Inter } from "next/font/google";
 import "./globals.css";
-import { Toaster } from 'react-hot-toast';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+//? Configurazione del font Inter con il sottoinsieme latino
+const inter = Inter({ subsets: ["latin"] });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
+//? Metadati globali dell'applicazione per SEO
+export const metadata = {
   title: "Rover32",
-  description: "Esp32 S3 RoverControl",
+  description: "ESP32-based vehicle control platform",
 };
 
-export default function RootLayout({
+//? Layout principale dell'applicazione che avvolge tutte le pagine
+export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Toaster position="top-right" reverseOrder={false} /> {/* Aggiunge il provider per le notifiche */}
+      <body className={inter.className}>
         {children}
       </body>
     </html>
   );
 }
+
+//TODO Aggiungere provider per tema chiaro/scuro
+//TODO Implementare caricamento condizionale di script e SEO avanzato

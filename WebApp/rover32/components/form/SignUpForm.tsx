@@ -6,8 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import GoogleSignInButton from '../GoogleButton';
-import GithubSignInButton from '../GithubButton';
+import GoogleButton from '../GoogleButton';
+import GithubButton from '../GithubButton';
+import DiscordButton from '../DiscordButton'
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
@@ -81,19 +82,18 @@ const SignUpForm = () => {
           width: '100%',
           height: '100%',
           objectFit: 'cover',
-          // zIndex: -1, // Ensure the video is behind everything
         }}
       >
         <source src="/muci.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-      <Card className="w-full max-w-md z-10"> {/* Ensure the card is above the video */}
+      <Card className="w-full max-w-md z-10">
         <CardHeader>
           <CardTitle className="text-2xl">Create an account</CardTitle>
           <CardDescription>Enter your details below to sign up</CardDescription>
         </CardHeader>
         <CardContent>
-          <nav className="w-full fixed top-0 left-0 z-20 bg-black shadow-md" style={{backgroundColor: 'transparent'}}> {/* Ensure the nav is above the video */}
+          <nav className="w-full fixed top-0 left-0 z-20 bg-black" style={{backgroundColor: 'transparent'}}>
             <div className="container mx-auto flex justify-between items-center px-4 py-2">
               <NavigationMenu>
                 <NavigationMenuList>
@@ -151,8 +151,9 @@ const SignUpForm = () => {
               or
             </div>
 
-            <GoogleSignInButton>Sign up with Google</GoogleSignInButton>
-            <GithubSignInButton>Sign up with GitHub</GithubSignInButton>
+            <GoogleButton>Sign up with Google</GoogleButton>
+            <GithubButton>Sign up with GitHub</GithubButton>
+            <DiscordButton>Sign in with Discord</DiscordButton>
 
             <p className="text-center text-sm text-gray-600 mt-2">
               Already have an account?&nbsp;
