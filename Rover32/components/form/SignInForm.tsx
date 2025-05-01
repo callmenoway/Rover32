@@ -57,7 +57,7 @@ export function SignInForm() {
       } else {
         //? Login riuscito, reindirizza alla dashboard
         toast.success('Login successful! Redirecting...');
-        router.push('/dashboard');
+        router.push('/vehicles');
       }
     } catch (error) {
       //! Gestione degli errori inaspettati

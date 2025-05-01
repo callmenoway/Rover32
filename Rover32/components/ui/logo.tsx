@@ -1,9 +1,10 @@
-import { CarFront } from "lucide-react";
+import { cn } from "@/lib/utils"
 
-export function Logo() {
+export function Logo({ className }: { className?: string }) {
   return (
-    <div className="rounded-lg bg-slate-900 p-2 w-10 h-10 flex items-center justify-center">
-      <CarFront className="h-5 w-5 text-white" />
+    <div className={cn("flex items-center gap-2", className)}>
+      <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-600 to-cyan-400"></div>
+      <span className="font-bold text-lg">Rover32</span>
     </div>
-  );
+  )
 }
