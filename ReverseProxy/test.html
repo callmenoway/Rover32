@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 WebSocket Controller</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .connection-panel {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .connected {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .video-container {
+            width: 100%;
+            height: 240px;
+            background-color: #000;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        #videoStream {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .control-row {
+            display: flex;
+            gap: 10px;
+        }
+        .control-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            border: none;
+            background-color: #4a90e2;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            touch-action: manipulation;
+        }
+        .control-btn:hover {
+            background-color: #357abf;
+        }
+        .control-btn:active {
+            background-color: #2a5885;
+        }
+        .feature-btn {
+            padding: 10px 15px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        .feature-btn:hover {
+            background-color: #5a6268;
+        }
+        .stop-btn {
+            background-color: #dc3545;
+        }
+        .stop-btn:hover {
+            background-color: #c82333;
+        }
+        .log-panel {
+            height: 150px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .steering-slider {
+            width: 90%;
+            margin: 20px auto;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        .slider-container label {
+            flex: 0 0 70px;
+        }
+        .slider-container input {
+            flex: 1;
+        }
+        .slider-value {
+            flex: 0 0 40px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ESP32 WebSocket Controller</h1>
+        
+        <div class="connection-panel">
+            <div>
+                <label for="controlWsUrl">Control WebSocket URL:</label>
+                <input type="text" id="controlWsUrl" value="ws://localhost:8081" style="width: 250px;">
+            </div>
+            <div style="margin-top: 10px;">
+                <label for="cameraWsUrl">Camera WebSocket URL:</label>
+                <input type="text" id="cameraWsUrl" value="ws://localhost:8082" style="width: 250px;">
+            </div>
+            <button id="connectBtn" style="margin-top: 10px; padding: 5px 15px;">Connect</button>
+            <div id="connectionStatus" class="status disconnected">Not connected</div>
+        </div>
+        
+        <div class="video-container">
+            <img id="videoStream" src="" alt="Video stream not available">
+        </div>
+        
+        <div class="controls">
+            <div class="control-row">
+                <div style="width: 80px;"></div>
+                <button class="control-btn" id="forwardBtn">▲<br>Forward</button>
+                <div style="width: 80px;"></div>
+            </div>
+            <div class="control-row">
+                <button class="control-btn" id="leftBtn">◄<br>Left</button>
+                <button class="control-btn stop-btn" id="stopBtn">□<br>Stop</button>
+                <button class="control-btn" id="rightBtn">►<br>Right</button>
+            </div>
+            <div class="control-row">
+                <div style="width: 80px;"></div>
+                <button class="control-btn" id="backwardBtn">▼<br>Backward</button>
+                <div style="width: 80px;"></div>
+            </div>
+        </div>
+        
+        <div class="slider-container steering-slider">
+            <label for="steeringSlider">Steering:</label>
+            <input type="range" id="steeringSlider" min="30" max="130" value="90">
+            <span id="steeringValue" class="slider-value">90°</span>
+        </div>
+        
+        <div style="display: flex; justify-content: center; margin: 20px 0;">
+            <button class="feature-btn" id="lightsOnBtn">Lights On</button>
+            <button class="feature-btn" id="lightsOffBtn">Lights Off</button>
+            <button class="feature-btn" id="drift1Btn">Drift 1</button>
+            <button class="feature-btn" id="drift2Btn">Drift 2</button>
+        </div>
+        
+        <div class="log-panel" id="logPanel"></div>
+    </div>
+    
+    <script>
+        let controlSocket = null;
+        let cameraSocket = null;
+        let connected = false;
+        let touchActive = false;
+        
+        // DOM Elements
+        const connectBtn = document.getElementById('connectBtn');
+        const controlWsUrl = document.getElementById('controlWsUrl');
+        const cameraWsUrl = document.getElementById('cameraWsUrl');
+        const connectionStatus = document.getElementById('connectionStatus');
+        const videoStream = document.getElementById('videoStream');
+        const logPanel = document.getElementById('logPanel');
+        const steeringSlider = document.getElementById('steeringSlider');
+        const steeringValue = document.getElementById('steeringValue');
+        
+        // Control buttons
+        const forwardBtn = document.getElementById('forwardBtn');
+        const backwardBtn = document.getElementById('backwardBtn');
+        const leftBtn = document.getElementById('leftBtn');
+        const rightBtn = document.getElementById('rightBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        
+        // Feature buttons
+        const lightsOnBtn = document.getElementById('lightsOnBtn');
+        const lightsOffBtn = document.getElementById('lightsOffBtn');
+        const drift1Btn = document.getElementById('drift1Btn');
+        const drift2Btn = document.getElementById('drift2Btn');
+        
+        // Log function
+        function log(message) {
+            const logEntry = document.createElement('div');
+            logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logPanel.appendChild(logEntry);
+            logPanel.scrollTop = logPanel.scrollHeight;
+            
+            // Keep only last 50 entries
+            while (logPanel.children.length > 50) {
+                logPanel.removeChild(logPanel.firstChild);
+            }
+        }
+        
+        // Connect to WebSockets
+        connectBtn.addEventListener('click', () => {
+            if (!connected) {
+                connectWebSockets();
+            } else {
+                disconnectWebSockets();
+            }
+        });
+        
+        function connectWebSockets() {
+            try {
+                // Connect to control WebSocket
+                controlSocket = new WebSocket(controlWsUrl.value);
+                
+                controlSocket.onopen = () => {
+                    log('Control connection established');
+                    updateConnectionStatus(true);
+                };
+                
+                controlSocket.onmessage = (event) => {
+                    log(`Control message: ${event.data}`);
+                };
+                
+                controlSocket.onclose = () => {
+                    log('Control connection closed');
+                    if (connected) {
+                        disconnectWebSockets();
+                    }
+                };
+                
+                controlSocket.onerror = (error) => {
+                    log(`Control error: ${error}`);
+                    disconnectWebSockets();
+                };
+                
+                // Connect to camera WebSocket
+                cameraSocket = new WebSocket(cameraWsUrl.value);
+                
+                cameraSocket.onopen = () => {
+                    log('Camera connection established');
+                };
+                
+                cameraSocket.onmessage = (event) => {
+                    try {
+                        // Parse the JSON message
+                        const data = JSON.parse(event.data);
+                        
+                        if (data.image) {
+                            // Create the image source from base64 data
+                            const imgSrc = `data:image/jpeg;base64,${data.image}`;
+                            
+                            // Log debug info periodically
+                            if (Math.random() < 0.1) {
+                                console.log(`Received frame: Length=${data.image.length} chars`);
+                                log(`Received frame: ${Math.round(data.image.length / 1024)} KB`);
+                            }
+                            
+                            // Set image directly to improve performance
+                            videoStream.src = imgSrc;
+                            
+                            // Optional: For troubleshooting, save a sample image
+                            if (Math.random() < 0.01) {  // Save roughly 1% of frames for analysis
+                                console.log("Sample frame data (first 100 chars):", data.image.substring(0, 100));
+                                
+                                // Create a download link for troubleshooting (uncomment if needed)
+                                /*
+                                const link = document.createElement('a');
+                                link.href = imgSrc;
+                                link.download = 'camera_frame.jpg';
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                                */
+                            }
+                        }
+                    } catch (e) {
+                        log(`Error processing camera data: ${e.message}`);
+                        console.error("Raw message:", event.data);
+                    }
+                };
+                
+                cameraSocket.onclose = () => {
+                    log('Camera connection closed');
+                    videoStream.src = '';
+                };
+                
+                cameraSocket.onerror = (error) => {
+                    log(`Camera error: ${error}`);
+                };
+                
+            } catch (e) {
+                log(`Connection error: ${e.message}`);
+            }
+        }
+        
+        function disconnectWebSockets() {
+            if (controlSocket) {
+                controlSocket.close();
+                controlSocket = null;
+            }
+            
+            if (cameraSocket) {
+                cameraSocket.close();
+                cameraSocket = null;
+            }
+            
+            updateConnectionStatus(false);
+        }
+        
+        function updateConnectionStatus(isConnected) {
+            connected = isConnected;
+            
+            if (isConnected) {
+                connectionStatus.textContent = 'Connected';
+                connectionStatus.className = 'status connected';
+                connectBtn.textContent = 'Disconnect';
+            } else {
+                connectionStatus.textContent = 'Disconnected';
+                connectionStatus.className = 'status disconnected';
+                connectBtn.textContent = 'Connect';
+                videoStream.src = '';
+            }
+        }
+        
+        // Send a command to the control WebSocket
+        function sendCommand(command) {
+            if (connected && controlSocket && controlSocket.readyState === WebSocket.OPEN) {
+                controlSocket.send(command);
+                log(`Sent command: ${command}`);
+            } else {
+                log('Cannot send command: not connected');
+            }
+        }
+        
+        // Button event listeners for desktop
+        forwardBtn.addEventListener('mousedown', () => sendCommand('forward'));
+        forwardBtn.addEventListener('mouseup', () => sendCommand('stop'));
+        forwardBtn.addEventListener('mouseleave', () => sendCommand('stop'));
+        
+        backwardBtn.addEventListener('mousedown', () => sendCommand('backward'));
+        backwardBtn.addEventListener('mouseup', () => sendCommand('stop'));
+        backwardBtn.addEventListener('mouseleave', () => sendCommand('stop'));
+        
+        leftBtn.addEventListener('mousedown', () => sendCommand('steer:60'));
+        leftBtn.addEventListener('mouseup', () => sendCommand('steer:90'));
+        leftBtn.addEventListener('mouseleave', () => sendCommand('steer:90'));
+        
+        rightBtn.addEventListener('mousedown', () => sendCommand('steer:120'));
+        rightBtn.addEventListener('mouseup', () => sendCommand('steer:90'));
+        rightBtn.addEventListener('mouseleave', () => sendCommand('steer:90'));
+        
+        stopBtn.addEventListener('click', () => sendCommand('stop'));
+        
+        // Button event listeners for mobile touch
+        forwardBtn.addEventListener('touchstart', (e) => { e.preventDefault(); sendCommand('forward'); });
+        forwardBtn.addEventListener('touchend', (e) => { e.preventDefault(); sendCommand('stop'); });
+        
+        backwardBtn.addEventListener('touchstart', (e) => { e.preventDefault(); sendCommand('backward'); });
+        backwardBtn.addEventListener('touchend', (e) => { e.preventDefault(); sendCommand('stop'); });
+        
+        leftBtn.addEventListener('touchstart', (e) => { e.preventDefault(); sendCommand('steer:60'); });
+        leftBtn.addEventListener('touchend', (e) => { e.preventDefault(); sendCommand('steer:90'); });
+        
+        rightBtn.addEventListener('touchstart', (e) => { e.preventDefault(); sendCommand('steer:120'); });
+        rightBtn.addEventListener('touchend', (e) => { e.preventDefault(); sendCommand('steer:90'); });
+        
+        stopBtn.addEventListener('touchstart', (e) => { e.preventDefault(); sendCommand('stop'); });
+        
+        // Feature buttons
+        lightsOnBtn.addEventListener('click', () => sendCommand('lights_on'));
+        lightsOffBtn.addEventListener('click', () => sendCommand('lights_off'));
+        drift1Btn.addEventListener('click', () => sendCommand('drift'));
+        drift2Btn.addEventListener('click', () => sendCommand('drift1'));
+        
+        // Steering slider
+        steeringSlider.addEventListener('input', () => {
+            const value = steeringSlider.value;
+            steeringValue.textContent = `${value}°`;
+            sendCommand(`steer:${value}`);
+        });
+        
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (!connected) return;
+            
+            switch (e.key.toLowerCase()) {
+                case 'w':
+                    sendCommand('forward');
+                    break;
+                case 's':
+                    sendCommand('backward');
+                    break;
+                case 'a':
+                    sendCommand('steer:60');
+                    break;
+                case 'd':
+                    sendCommand('steer:120');
+                    break;
+                case ' ':
+                    sendCommand('stop');
+                    break;
+            }
+        });
+        
+        document.addEventListener('keyup', (e) => {
+            if (!connected) return;
+            
+            switch (e.key.toLowerCase()) {
+                case 'w':
+                case 's':
+                    sendCommand('stop');
+                    break;
+                case 'a':
+                case 'd':
+                    sendCommand('steer:90');
+                    break;
+            }
+        });
+        
+        // Initial log
+        log('Controller ready. Please connect to the WebSocket server.');
+    </script>
+</body>
+</html>
