@@ -5,6 +5,7 @@ import { VehicleList } from "@/components/vehicles/VehicleList";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Key } from "lucide-react";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 //? Metadati della pagina per il SEO
 export const metadata = {
@@ -31,12 +32,15 @@ export default async function VehiclesPage() {
           </Link>
         </Button>
         
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/api-keys" className="flex items-center">
-            <Key className="mr-1 h-4 w-4" />
-            Manage API Keys
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/api-keys" className="flex items-center">
+              <Key className="mr-1 h-4 w-4" />
+              Manage API Keys
+            </Link>
+          </Button>
+        </div>
       </div>
       <VehicleList />
     </div>

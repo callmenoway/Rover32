@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { ApiKeyList } from "@/components/api-keys/ApiKeyList";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 //? Metadati della pagina per il SEO
 export const metadata = {
@@ -23,13 +24,15 @@ export default async function ApiKeysPage() {
 
   return (
     <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div className="mb-6">
+      <div className="mb-6 flex justify-between items-center">
         <Button variant="ghost" size="sm" asChild>
           <Link href="/vehicles" className="flex items-center">
             <ChevronLeft className="mr-1 h-4 w-4" />
             Back to Vehicles
           </Link>
         </Button>
+        
+        <ThemeToggle />
       </div>
       <ApiKeyList />
     </div>

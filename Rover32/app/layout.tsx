@@ -2,6 +2,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/use-toast";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
 //? Configurazione del font Inter con il sottoinsieme latino
 const inter = Inter({ subsets: ["latin"] });
@@ -19,14 +20,15 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        {children}
-        <Toaster />
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
 }
 
-//TODO Aggiungere provider per tema chiaro/scuro
 //TODO Implementare caricamento condizionale di script e SEO avanzato

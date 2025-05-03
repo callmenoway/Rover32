@@ -9,6 +9,7 @@ import { Logo } from "@/components/ui/logo"
 import { LogOut, Menu } from "lucide-react"
 import * as React from "react"
 import { useSession, SessionProvider, signOut } from "next-auth/react"
+import { ThemeToggle } from "@/components/theme/ThemeToggle"
 
 //? Dati dei componenti mostrati nel menu di navigazione
 const components = [
@@ -117,6 +118,8 @@ function HomeContent() {
         </button>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
+          
           {isLoading ? (
             //? Stato di caricamento della sessione
             <Button variant="outline" size="sm" disabled>Loading...</Button>
