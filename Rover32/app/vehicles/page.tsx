@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { VehicleList } from "@/components/vehicles/VehicleList";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Key } from "lucide-react";
+import { ChevronLeft, Key, Plus } from "lucide-react";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 //? Metadati della pagina per il SEO
@@ -34,6 +34,12 @@ export default async function VehiclesPage() {
         
         <div className="flex items-center gap-2">
           <ThemeToggle />
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/vehicles/add" className="flex items-center">
+              <Plus className="mr-1 h-4 w-4" />
+              Add Vehicle
+            </Link>
+          </Button>
           <Button variant="outline" size="sm" asChild>
             <Link href="/api-keys" className="flex items-center">
               <Key className="mr-1 h-4 w-4" />
