@@ -13,15 +13,26 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Vehicle } from "@/types";
+import { toast } from "@/components/ui/use-toast";
 
 //? Schema di validazione Zod per il form
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }).max(100, { message: "Name is too long" }),
-  ipAddress: z.string().min(1, { message: "IP address is required" }),
+  ipAddress: z.string()
+    .min(1, { message: "IP address is required" })
+    .regex(/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/, {
+      message: "Invalid IP address format. Use format XXX.XXX.XXX.XXX"
+    }),
+  macAddress: z.string()
+    .min(1, { message: "MAC address is required" })
+    .regex(/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/, { 
+      message: "Invalid MAC address format. Use format XX:XX:XX:XX:XX:XX or XX-XX-XX-XX-XX-XX" 
+    }),
 });
 
 //? Interfaccia delle props del componente
@@ -41,6 +52,7 @@ export function VehicleForm({ vehicle, isEdit = false }: VehicleFormProps) {
     defaultValues: {
       name: vehicle?.name || "",
       ipAddress: vehicle?.ipAddress || "",
+      macAddress: vehicle?.macAddress || "",
     },
   });
 
@@ -78,16 +90,23 @@ export function VehicleForm({ vehicle, isEdit = false }: VehicleFormProps) {
         throw new Error(data.message || "Something went wrong");
       }
 
-      //? Notifica di successo
-      alert(isEdit ? "Vehicle updated successfully" : "Vehicle created successfully");
+      //? Notifica di successo con toast
+      toast({
+        title: isEdit ? "Vehicle updated" : "Vehicle created",
+        description: isEdit ? "Your vehicle has been updated successfully" : "Your vehicle has been created successfully",
+      });
       
       //? Reindirizzamento alla lista dei veicoli e aggiornamento dei dati
       router.push("/vehicles");
       router.refresh();
     } catch (error) {
-      //! Gestione errori
+      //! Gestione errori con toast
       console.error(error);
-      alert((error as Error).message || "Failed to save vehicle");
+      toast({
+        title: "Error",
+        description: (error as Error).message || "Failed to save vehicle",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -130,6 +149,23 @@ export function VehicleForm({ vehicle, isEdit = false }: VehicleFormProps) {
                     <Input placeholder="192.168.1.100" {...field} />
                   </FormControl>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="macAddress"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>MAC Address</FormLabel>
+                  <FormControl>
+                    <Input placeholder="XX:XX:XX:XX:XX:XX" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                  <FormDescription>
+                    The MAC address of your ESP32 device (e.g., 00:11:22:33:44:55)
+                  </FormDescription>
                 </FormItem>
               )}
             />

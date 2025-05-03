@@ -15,7 +15,9 @@ export async function DELETE(
       return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     }
 
-    const id = params.id;
+    // Correctly await the resolved params
+    const resolvedParams = await Promise.resolve(params);
+    const id = resolvedParams.id;
 
     // First check if the API key exists and belongs to the user
     const apiKey = await db.apiKey.findUnique({

@@ -12,9 +12,25 @@ const Toaster = ({ ...props }: ToasterProps) => {
       className="toaster group"
       style={
         {
+          // Default/normal toast
           "--normal-bg": "var(--popover)",
           "--normal-text": "var(--popover-foreground)",
           "--normal-border": "var(--border)",
+          
+          // Success toast
+          "--success-bg": "var(--success)",
+          "--success-text": "var(--success-foreground)",
+          "--success-border": "var(--success)",
+          
+          // Error toast
+          "--error-bg": "var(--destructive)",
+          "--error-text": "var(--destructive-foreground)",
+          "--error-border": "var(--destructive)",
+          
+          // Info toast
+          "--info-bg": "var(--info, var(--primary))",
+          "--info-text": "var(--info-foreground, var(--primary-foreground))",
+          "--info-border": "var(--info, var(--primary))",
         } as React.CSSProperties
       }
       {...props}

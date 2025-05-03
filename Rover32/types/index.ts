@@ -12,6 +12,7 @@ export type Vehicle = {
   id: string;                 // Identificatore univoco del veicolo
   name: string;               // Nome personalizzato del veicolo
   ipAddress: string;          // Indirizzo IP per la connessione al veicolo
+  macAddress?: string;        // Indirizzo MAC del veicolo per identificazione univoca
   userId: string;             // ID dell'utente proprietario del veicolo
   createdAt: string | Date;   // Data di aggiunta del veicolo
   updatedAt: string | Date;   // Data dell'ultimo aggiornamento delle informazioni

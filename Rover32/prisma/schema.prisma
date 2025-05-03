@@ -74,6 +74,7 @@ model Vehicle {
   id          String   @id @default(cuid())         // ID univoco del veicolo
   name        String                                // Nome personalizzato del veicolo
   ipAddress   String                                // Indirizzo IP per la connessione al veicolo
+  macAddress  String?                               // Indirizzo MAC opzionale per la connessione al veicolo
   userId      String                                // ID dell'utente proprietario del veicolo
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade) // Relazione all'utente
   createdAt   DateTime @default(now())              // Timestamp di creazione del veicolo

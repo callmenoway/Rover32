@@ -18,6 +18,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert";
 import { Vehicle, VehicleStatus } from "@/types";
+import { toast } from "@/components/ui/use-toast";
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -74,13 +75,21 @@ export function VehicleCard({ vehicle }: VehicleCardProps) {
         throw new Error(data.message || "Failed to delete vehicle");
       }
 
-      //? Notifica di successo
-      alert("Vehicle deleted successfully");
+      //? Notifica di successo con toast
+      toast({
+        title: "Vehicle deleted",
+        description: "Your vehicle has been deleted successfully",
+      });
+      
       router.refresh();
     } catch (error) {
-      //! Gestione degli errori
+      //! Gestione degli errori con toast
       console.error("Error deleting vehicle:", error);
-      alert((error as Error).message || "Failed to delete vehicle");
+      toast({
+        title: "Error",
+        description: (error as Error).message || "Failed to delete vehicle",
+        variant: "destructive",
+      });
     } finally {
       setIsDeleting(false);
     }
@@ -111,6 +120,12 @@ export function VehicleCard({ vehicle }: VehicleCardProps) {
             <span className="text-sm text-muted-foreground">IP Address:</span>
             <span className="font-medium">{vehicle.ipAddress}</span>
           </div>
+          {vehicle.macAddress && (
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">MAC Address:</span>
+              <span className="font-medium">{vehicle.macAddress}</span>
+            </div>
+          )}
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Status:</span>
             <Badge

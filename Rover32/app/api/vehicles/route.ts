@@ -7,7 +7,16 @@ import * as z from "zod";
 //? Schema Zod per la validazione dell'input
 const vehicleSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
-  ipAddress: z.string().min(1, "IP Address is required"),
+  ipAddress: z.string()
+    .min(1, "IP Address is required")
+    .regex(/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/, {
+      message: "Invalid IP address format. Use format XXX.XXX.XXX.XXX"
+    }),
+  macAddress: z.string()
+    .min(1, "MAC address is required")
+    .regex(/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/, { 
+      message: "Invalid MAC address format. Use format XX:XX:XX:XX:XX:XX or XX-XX-XX-XX-XX-XX" 
+    }),
 });
 
 //? Handler GET per ottenere tutti i veicoli dell'utente corrente
@@ -48,13 +57,14 @@ export async function POST(req: Request) {
 
     //? Estrae e valida i dati dalla richiesta
     const body = await req.json();
-    const { name, ipAddress } = vehicleSchema.parse(body);
+    const { name, ipAddress, macAddress } = vehicleSchema.parse(body);
 
     //? Crea un nuovo veicolo nel database
     const newVehicle = await db.vehicle.create({
       data: {
         name,
         ipAddress,
+        macAddress,
         userId: session.user.id,
       },
     });

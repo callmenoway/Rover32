@@ -29,8 +29,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { EmptyState } from "@/components/EmptyState";
-import { toast } from "sonner"
-
+import { toast } from "@/components/ui/use-toast";
 // Interface for API key data
 interface ApiKey {
   id: string;
@@ -79,14 +78,11 @@ export function ApiKeyList() {
   // Function to create a new API key
   const createApiKey = async () => {
     if (!newKeyName.trim()) {
-    //   toast({
-    //     title: "Error",
-    //     description: "API key name is required",
-    //     variant: "destructive",
-    //   });
-        toast.error("Error", {
-            description: "API key name is required",
-      })
+      toast({
+        title: "Error",
+        description: "API key name is required",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -113,24 +109,18 @@ export function ApiKeyList() {
       setNewKeyName("");
       fetchApiKeys();
       
-    //   toast({
-    //     title: "Success",
-    //     description: "API key created successfully",
-    //   });
-    toast.success("Success", {
+      toast({
+        title: "Success",
         description: "API key created successfully",
-    })
+      });
 
     } catch (error) {
       console.error("Error creating API key:", error);
-    //   toast({
-    //     title: "Error",
-    //     description: (error as Error).message || "Failed to create API key",
-    //     variant: "destructive",
-    //   });
-    toast.error("Error", {
+      toast({
+        title: "Error",
         description: (error as Error).message || "Failed to create API key",
-    })
+        variant: "destructive",
+      });
 
     } finally {
       setIsCreating(false);
@@ -154,25 +144,18 @@ export function ApiKeyList() {
       // Update the local state by removing the deleted key
       setApiKeys(apiKeys.filter(key => key.id !== id));
       
-    //   toast({
-    //     title: "Success",
-    //     description: "API key deleted successfully",
-    //   });
-    toast.success("Success", {
+      toast({
+        title: "Success",
         description: "API key deleted successfully",
-    })
+      });
 
     } catch (error) {
       console.error("Error deleting API key:", error);
-    //   toast({
-    //     title: "Error",
-    //     description: (error as Error).message || "Failed to delete API key",
-    //     variant: "destructive",
-    //   });
-
-    toast.error("Error", {
+      toast({
+        title: "Error",
         description: (error as Error).message || "Failed to delete API key",
-    })
+        variant: "destructive",
+      });
 
     } finally {
       setIsDeleting(false);
@@ -182,13 +165,10 @@ export function ApiKeyList() {
   // Function to copy API key to clipboard
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    // toast({
-    //   title: "Copied",
-    //   description: "API key copied to clipboard",
-    // });
-    toast.info("Info", {
-        description: "API key copied to clipboard",
-    })
+    toast({
+      title: "Copied",
+      description: "API key copied to clipboard",
+    });
   };
 
   // Loading state
@@ -227,7 +207,7 @@ export function ApiKeyList() {
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Your API Keys</h2>
           <p className="text-muted-foreground mt-1">
-            Manage API keys to access your Rover32 vehicles programmatically
+            Manage API keys to access your Rover32 vehicles
           </p>
         </div>
         
