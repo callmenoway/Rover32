@@ -1,0 +1,12 @@
+{
+  "name": "tcp-websocket-proxy",
+  "version": "1.0.0",
+  "description": "Proxy TCP-WebSocket per rover ESP32",
+  "main": "tcp-websocket-proxy.js",
+  "scripts": {
+    "start": "node tcp-websocket-proxy.js"
+  },
+  "dependencies": {
+    "ws": "^8.13.0"
+  }
+}

@@ -1,18 +1,18 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { VehicleList } from "@/components/vehicles/VehicleList";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Key } from "lucide-react";
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
+import { ApiKeyList } from "@/components/api-keys/ApiKeyList";
 
 //? Metadati della pagina per il SEO
 export const metadata = {
-  title: "Your Vehicles - Rover32",
-  description: "View and manage your ESP32 vehicles",
+  title: "API Keys - Rover32",
+  description: "Manage your Rover32 API keys",
 };
 
-export default async function VehiclesPage() {
+export default async function ApiKeysPage() {
   //? Ottiene la sessione dell'utente dal server
   const session = await getServerSession(authOptions);
 
@@ -23,22 +23,15 @@ export default async function VehiclesPage() {
 
   return (
     <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div className="mb-6 flex justify-between items-center">
+      <div className="mb-6">
         <Button variant="ghost" size="sm" asChild>
-          <Link href="/" className="flex items-center">
+          <Link href="/vehicles" className="flex items-center">
             <ChevronLeft className="mr-1 h-4 w-4" />
-            Back to Home
-          </Link>
-        </Button>
-        
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/api-keys" className="flex items-center">
-            <Key className="mr-1 h-4 w-4" />
-            Manage API Keys
+            Back to Vehicles
           </Link>
         </Button>
       </div>
-      <VehicleList />
+      <ApiKeyList />
     </div>
   );
 }

@@ -20,6 +20,7 @@ model User {
   accounts      Account[]                           // Relazione agli account di autenticazione esterni
   sessions      Session[]                           // Relazione alle sessioni attive dell'utente
   vehicles      Vehicle[]                           // Relazione ai veicoli posseduti dall'utente
+  apiKeys       ApiKey[]                            // Relazione alle chiavi API dell'utente
   createdAt     DateTime  @default(now())           // Timestamp di creazione dell'account
   updatedAt     DateTime  @updatedAt                // Timestamp dell'ultimo aggiornamento
 }
@@ -77,6 +78,20 @@ model Vehicle {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade) // Relazione all'utente
   createdAt   DateTime @default(now())              // Timestamp di creazione del veicolo
   updatedAt   DateTime @updatedAt                   // Timestamp dell'ultimo aggiornamento
+
+  //? Indici
+  @@index([userId])                                 // Indice sulla colonna userId per prestazioni
+}
+
+//? Modello ApiKey per gestire le chiavi API degli utenti
+model ApiKey {
+  id        String   @id @default(cuid())           // ID univoco della chiave API
+  key       String   @unique                        // Chiave API univoca
+  name      String                                // Nome della chiave API
+  userId    String                                // ID dell'utente proprietario della chiave API
+  createdAt DateTime @default(now())              // Timestamp di creazione della chiave API
+  lastUsed  DateTime?                             // Timestamp dell'ultimo utilizzo della chiave API
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade) // Relazione all'utente
 
   //? Indici
   @@index([userId])                                 // Indice sulla colonna userId per prestazioni
