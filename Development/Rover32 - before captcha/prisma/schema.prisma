@@ -1,0 +1,118 @@
+//? Configurazione del generatore Prisma Client
+generator client {
+  provider = "prisma-client-js"
+}
+
+//? Configurazione della fonte di dati PostgreSQL
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")   // URL completo per la connessione, può includere pooling
+  directUrl = env("DIRECT_URL")     // URL diretto per operazioni che richiedono una connessione diretta
+}
+
+//? Modello User per gestire gli utenti dell'applicazione
+model User {
+  id            String    @id @default(cuid())      // ID univoco, generato usando cuid
+  username      String?                             // Username opzionale dell'utente
+  email         String    @unique                   // Email univoca dell'utente, usata per il login
+  emailVerified DateTime?                           // Timestamp di verifica dell'email
+  password      String                              // Password hashata dell'utente
+  accounts      Account[]                           // Relazione agli account di autenticazione esterni
+  sessions      Session[]                           // Relazione alle sessioni attive dell'utente
+  vehicles      Vehicle[]                           // Relazione ai veicoli posseduti dall'utente
+  apiKeys       ApiKey[]                            // Relazione alle chiavi API dell'utente
+  createdAt     DateTime  @default(now())           // Timestamp di creazione dell'account
+  updatedAt     DateTime  @updatedAt                // Timestamp dell'ultimo aggiornamento
+}
+
+//? Modello Account per autenticazione esterna (Google, GitHub, ecc.)
+model Account {
+  id                String  @id @default(cuid())    // ID univoco dell'account
+  userId            String                          // ID dell'utente a cui appartiene l'account
+  provider          String                          // Provider di autenticazione (Google, GitHub, ecc.)
+  providerAccountId String                          // ID univoco fornito dal provider
+  type              String                          // Tipo di account (OAuth, email/password, ecc.)
+  access_token      String? @map("accessToken")     // Token di accesso
+  expires_at        Int?                            // Timestamp di scadenza del token
+  refresh_token     String? @db.Text                // Token di aggiornamento per rinnovare l'accesso
+  scope             String?                         // Ambiti di autorizzazione
+  id_token          String? @db.Text                // Token ID per l'autenticazione
+  session_state     String?                         // Stato della sessione
+  token_type        String? @map("tokenType")       // Tipo di token
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade) // Relazione all'utente
+
+  //? Indici e vincoli
+  @@unique([provider, providerAccountId])           // L'account deve essere univoco per provider
+  @@map("Account")                                  // Nome della tabella nel DB
+  @@index([userId])                                 // Indice sulla colonna userId per prestazioni
+}
+
+//? Modello Session per gestire le sessioni dell'utente
+model Session {
+  id           String   @id @default(cuid())        // ID univoco della sessione
+  sessionToken String   @unique                     // Token di sessione univoco
+  userId       String                               // ID dell'utente a cui appartiene la sessione
+  expires      DateTime                             // Timestamp di scadenza della sessione
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade) // Relazione all'utente
+
+  //? Indici
+  @@index([userId])                                 // Indice sulla colonna userId per prestazioni
+}
+
+//? Modello VerificationToken per la verifica dell'email e recupero password
+model VerificationToken {
+  identifier String                                 // Identificatore (di solito l'email dell'utente)
+  token      String   @unique                       // Token univoco per la verifica
+  expires    DateTime                               // Timestamp di scadenza del token
+
+  //? Vincoli
+  @@unique([identifier, token])                     // La combinazione di identificatore e token deve essere unica
+}
+
+//? Modello Vehicle per gestire i veicoli degli utenti
+model Vehicle {
+  id             String         @id @default(cuid())
+  name           String
+  ipAddress      String
+  macAddress     String         @unique
+  uptimeHours    Float          @default(0)
+  controlHours   Float          @default(0)
+  kilometersDriven Float        @default(0)
+  userId         String
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stats          VehicleStats[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@index([userId])
+}
+
+model VehicleStats {
+  id              String   @id @default(cuid())
+  date            DateTime @db.Date
+  uptimeHours     Float    @default(0)
+  controlHours    Float    @default(0)
+  kilometersDriven Float   @default(0)
+  vehicleId       String
+  vehicle         Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([vehicleId, date])
+  @@index([vehicleId])
+  @@index([date])
+}
+
+//? Modello ApiKey per gestire le chiavi API degli utenti
+model ApiKey {
+  id        String   @id @default(cuid())           // ID univoco della chiave API
+  key       String   @unique                        // Chiave API univoca
+  name      String                                // Nome della chiave API
+  userId    String                                // ID dell'utente proprietario della chiave API
+  createdAt DateTime @default(now())              // Timestamp di creazione della chiave API
+  lastUsed  DateTime?                             // Timestamp dell'ultimo utilizzo della chiave API
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade) // Relazione all'utente
+
+  //? Indici
+  @@index([userId])                                 // Indice sulla colonna userId per prestazioni
+}

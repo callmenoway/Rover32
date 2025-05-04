@@ -13,6 +13,9 @@ import { toast } from "sonner";
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/src/components/ui/card';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList, navigationMenuTriggerStyle } from "@/src/components/ui/navigation-menu";
+import { useState, useRef } from 'react';
+import { Turnstile } from '@marsidev/react-turnstile';
+import { signIn } from 'next-auth/react';
 
 const FormSchema = z
   .object({
@@ -23,6 +26,7 @@ const FormSchema = z
       .min(1, 'Password is required')
       .min(8, 'Password must have at least 8 characters'),
     confirmPassword: z.string().min(1, 'Password confirmation is required'),
+    captchaToken: z.string().optional() // Add this field to the schema
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ['confirmPassword'],
@@ -30,6 +34,9 @@ const FormSchema = z
   });
 
 const SignUpForm = () => {
+  const [captchaToken, setCaptchaToken] = useState<string>('');
+  const turnstileRef = useRef(null);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -62,6 +69,40 @@ const SignUpForm = () => {
       // console.error('Registration failed');
       toast.error('Registration failed. Please try again.');
     }
+  };
+
+  // Handle Turnstile CAPTCHA verification
+  const handleCaptchaVerify = (token: string) => {
+    setCaptchaToken(token);
+    form.setValue('captchaToken', token);
+    form.clearErrors('captchaToken');
+  };
+
+  // Handle Turnstile CAPTCHA expiration
+  const handleCaptchaExpire = () => {
+    setCaptchaToken('');
+    form.setValue('captchaToken', '');
+    form.setError('captchaToken', { 
+      type: 'manual', 
+      message: 'CAPTCHA has expired, please verify again' 
+    });
+  };
+
+  // Function to handle OAuth sign-in with proper redirect
+  const handleOAuthSignIn = (provider: string) => {
+    if (!captchaToken) {
+      toast.error("Please complete the CAPTCHA verification first");
+      return;
+    }
+    
+    // Prevent form validation errors by stopping event propagation
+    form.clearErrors();
+    
+    // Use direct signIn with the correct callbackUrl
+    signIn(provider, { 
+      callbackUrl: '/vehicles',
+      redirect: true
+    });
   };
 
   const {
@@ -110,7 +151,8 @@ const SignUpForm = () => {
             </div>
           </nav>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+            {/* Add noValidate attribute to prevent browser validation */}
             <div>
               <Input placeholder="Username" {...register('username')} />
               {errors.username && (
@@ -146,7 +188,17 @@ const SignUpForm = () => {
               )}
             </div>
 
-            <Button className="w-full mt-2" type="submit">
+            {/* Add the CAPTCHA component which was missing */}
+            <div className="flex justify-center my-4">
+              <Turnstile
+                ref={turnstileRef}
+                siteKey="0x4AAAAAABaVTxn_QOkTDwiB"
+                onSuccess={handleCaptchaVerify}
+                onExpire={handleCaptchaExpire}
+              />
+            </div>
+
+            <Button className="w-full mt-2" type="submit" disabled={!captchaToken}>
               Sign up
             </Button>
 
@@ -154,9 +206,25 @@ const SignUpForm = () => {
               or
             </div>
 
-            <GoogleButton>Sign up with Google</GoogleButton>
-            <GithubButton>Sign up with GitHub</GithubButton>
-            <DiscordButton>Sign up with Discord</DiscordButton>
+            {/* Move OAuth buttons outside the form to prevent form validation */}
+          </form>
+          
+          <div className="space-y-3 mt-4">
+            <GoogleButton
+              onClick={() => handleOAuthSignIn('google')}
+            >
+              Sign up with Google
+            </GoogleButton>
+            <GithubButton
+              onClick={() => handleOAuthSignIn('github')}
+            >
+              Sign up with GitHub
+            </GithubButton>
+            <DiscordButton
+              onClick={() => handleOAuthSignIn('discord')}
+            >
+              Sign up with Discord
+            </DiscordButton>
 
             <p className="text-center text-sm text-gray-600 mt-2">
               Already have an account?&nbsp;
@@ -164,7 +232,7 @@ const SignUpForm = () => {
                 Sign in
               </Link>
             </p>
-          </form>
+          </div>
         </CardContent>
       </Card>
     </div>
@@ -172,3 +240,4 @@ const SignUpForm = () => {
 };
 
 export default SignUpForm;
+
