@@ -103,12 +103,15 @@ export function VehicleForm({ vehicle, isEdit = false }: VehicleFormProps) {
     } catch (error) {
       //! Gestione errori con toast
       console.error(error);
-      // toast({
-      //   title: "Error",
-      //   description: (error as Error).message || "Failed to save vehicle",
-      //   variant: "destructive",
-      // });
-      toast.error('Failed to save vehicle');
+      
+      // Check for duplicate MAC address error
+      if ((error as Error).message?.toLowerCase().includes('mac address already exists') || 
+          (error as Error).message?.toLowerCase().includes('duplicate') && 
+          (error as Error).message?.toLowerCase().includes('mac')) {
+        toast.error('MAC address already exists');
+      } else {
+        toast.error((error as Error).message || 'Failed to save vehicle');
+      }
       
     } finally {
       setIsLoading(false);

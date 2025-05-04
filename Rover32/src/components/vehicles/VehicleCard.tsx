@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Edit, Trash2, Activity, Wifi, WifiOff } from "lucide-react";
+import { Edit, Trash2, Activity, Wifi, WifiOff, BarChart2 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/src/components/ui/card";
 import { Badge } from "@/src/components/ui/badge";
@@ -98,9 +98,9 @@ export function VehicleCard({ vehicle }: VehicleCardProps) {
     }
   };
 
-  //? Funzione per connettersi al veicolo e controllarlo
-  const handleConnect = () => {
-    router.push(`/vehicles/control/${vehicle.id}`);
+  //? Funzione per visualizzare le statistiche del veicolo
+  const handleViewStats = () => {
+    router.push(`/vehicles/stats/${vehicle.id}`);
   };
 
   return (
@@ -190,11 +190,11 @@ export function VehicleCard({ vehicle }: VehicleCardProps) {
           </AlertDialog>
         </div>
         <Button
-          onClick={handleConnect}
-          disabled={status === "offline"}
-          variant={status === "online" ? "default" : "secondary"}
+          onClick={handleViewStats}
+          variant="default"
         >
-          Connect
+          <BarChart2 className="h-4 w-4 mr-1" />
+          Stats
         </Button>
       </CardFooter>
     </Card>

@@ -101,6 +101,17 @@ export async function POST(req: Request) {
       }, { status: 400 });
     }
 
+    // Check for Prisma unique constraint error (likely duplicate MAC address)
+    if (typeof error === 'object' && error !== null && 'code' in error && error.code === 'P2002') {
+      const target = (error as any).meta?.target;
+      if (target && target.includes('macAddress')) {
+        return NextResponse.json({ 
+          vehicle: null, 
+          message: "MAC address already exists" 
+        }, { status: 400 });
+      }
+    }
+
     //! Gestione degli errori generali
     console.error("Error creating vehicle:", error);
     return NextResponse.json({ vehicle: null, message: "Failed to create vehicle" }, { status: 500 });
