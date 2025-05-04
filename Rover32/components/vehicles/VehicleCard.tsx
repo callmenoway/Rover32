@@ -18,7 +18,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert";
 import { Vehicle, VehicleStatus } from "@/types";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -76,20 +76,23 @@ export function VehicleCard({ vehicle }: VehicleCardProps) {
       }
 
       //? Notifica di successo con toast
-      toast({
-        title: "Vehicle deleted",
-        description: "Your vehicle has been deleted successfully",
-      });
+      // toast({
+      //   title: "Vehicle deleted",
+      //   description: "Your vehicle has been deleted successfully",
+      // });
+      toast.info('Your vehicle has been deleted successfully');
       
       router.refresh();
     } catch (error) {
       //! Gestione degli errori con toast
       console.error("Error deleting vehicle:", error);
-      toast({
-        title: "Error",
-        description: (error as Error).message || "Failed to delete vehicle",
-        variant: "destructive",
-      });
+      // toast({
+      //   title: "Error",
+      //   description: (error as Error).message || "Failed to delete vehicle",
+      //   variant: "destructive",
+      // });
+      toast.error('Failed to delete vehicle');
+
     } finally {
       setIsDeleting(false);
     }

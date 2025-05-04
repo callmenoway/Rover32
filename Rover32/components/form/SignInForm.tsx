@@ -12,7 +12,7 @@ import DiscordButton from '../buttons/DiscordButton';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { toast } from 'react-hot-toast';
+import { toast } from "sonner"
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { useState } from 'react';
 

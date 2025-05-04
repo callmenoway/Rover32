@@ -1,7 +1,7 @@
 //? Importazione del font Inter da Google Fonts
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
 //? Configurazione del font Inter con il sottoinsieme latino

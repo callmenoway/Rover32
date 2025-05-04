@@ -6,8 +6,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import GoogleSignInButton from '../buttons/GoogleButton';
-import GithubSignInButton from '../buttons/GithubButton';
+import GoogleButton from '../buttons/GoogleButton';
+import GithubButton from '../buttons/GithubButton';
+import DiscordButton from '../buttons/DiscordButton';
+import { toast } from "sonner";
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
@@ -54,9 +56,11 @@ const SignUpForm = () => {
     });
 
     if (response.ok) {
+      toast.success('Registration successful! Please sign in.');
       router.push('/sign-in');
     } else {
-      console.error('Registration failed');
+      // console.error('Registration failed');
+      toast.error('Registration failed. Please try again.');
     }
   };
 
@@ -150,8 +154,9 @@ const SignUpForm = () => {
               or
             </div>
 
-            <GoogleSignInButton>Sign up with Google</GoogleSignInButton>
-            <GithubSignInButton>Sign up with GitHub</GithubSignInButton>
+            <GoogleButton>Sign up with Google</GoogleButton>
+            <GithubButton>Sign up with GitHub</GithubButton>
+            <DiscordButton>Sign up with Discord</DiscordButton>
 
             <p className="text-center text-sm text-gray-600 mt-2">
               Already have an account?&nbsp;

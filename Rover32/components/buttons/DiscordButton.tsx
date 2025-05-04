@@ -1,5 +1,5 @@
 import { FC, ReactNode } from "react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { FaDiscord } from "react-icons/fa";
 import { signIn } from "next-auth/react";
 
@@ -15,8 +15,12 @@ const DiscordButton: FC<DiscordButtonProps> = ({ children, onClick }) => {
   };
 
   return (
-    <Button onClick={loginWithDiscord} className="w-full flex items-center space-x-2">
-      <FaDiscord size={20} color="#ffffff" />
+    <Button
+      onClick={loginWithDiscord}
+      className="w-full flex items-center space-x-2"
+      variant="outline"
+    >
+      <FaDiscord size={20} className="text-foreground" />
       <span>{children}</span>
     </Button>
   );

@@ -29,7 +29,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { EmptyState } from "@/components/EmptyState";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 // Interface for API key data
 interface ApiKey {
   id: string;
@@ -78,11 +78,12 @@ export function ApiKeyList() {
   // Function to create a new API key
   const createApiKey = async () => {
     if (!newKeyName.trim()) {
-      toast({
-        title: "Error",
-        description: "API key name is required",
-        variant: "destructive",
-      });
+      // toast({
+      //   title: "Error",
+      //   description: "API key name is required",
+      //   variant: "destructive",
+      // });
+      toast.error('API key name is required');
       return;
     }
 
@@ -109,18 +110,20 @@ export function ApiKeyList() {
       setNewKeyName("");
       fetchApiKeys();
       
-      toast({
-        title: "Success",
-        description: "API key created successfully",
-      });
+      // toast({
+      //   title: "Success",
+      //   description: "API key created successfully",
+      // });
+      toast.success('API key created successfully');
 
     } catch (error) {
       console.error("Error creating API key:", error);
-      toast({
-        title: "Error",
-        description: (error as Error).message || "Failed to create API key",
-        variant: "destructive",
-      });
+      // toast({
+      //   title: "Error",
+      //   description: (error as Error).message || "Failed to create API key",
+      //   variant: "destructive",
+      // });
+      toast.error('Failed to create API key');
 
     } finally {
       setIsCreating(false);
@@ -144,18 +147,20 @@ export function ApiKeyList() {
       // Update the local state by removing the deleted key
       setApiKeys(apiKeys.filter(key => key.id !== id));
       
-      toast({
-        title: "Success",
-        description: "API key deleted successfully",
-      });
+      // toast({
+      //   title: "Success",
+      //   description: "API key deleted successfully",
+      // });
+      toast.success('API key deleted successfully');
 
     } catch (error) {
       console.error("Error deleting API key:", error);
-      toast({
-        title: "Error",
-        description: (error as Error).message || "Failed to delete API key",
-        variant: "destructive",
-      });
+      // toast({
+      //   title: "Error",
+      //   description: (error as Error).message || "Failed to delete API key",
+      //   variant: "destructive",
+      // });
+      toast.error('Failed to delete API key');
 
     } finally {
       setIsDeleting(false);
@@ -165,10 +170,11 @@ export function ApiKeyList() {
   // Function to copy API key to clipboard
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast({
-      title: "Copied",
-      description: "API key copied to clipboard",
-    });
+    // toast({
+    //   title: "Copied",
+    //   description: "API key copied to clipboard",
+    // });
+    toast.info('API key copied to clipboard');
   };
 
   // Loading state

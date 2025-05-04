@@ -1,7 +1,8 @@
 import { FC, ReactNode } from "react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { FaGithub } from "react-icons/fa";
 import { signIn } from "next-auth/react";
+import { VariantProps } from 'class-variance-authority';
 
 interface GithubButtonProps {
   children: ReactNode;
@@ -15,8 +16,12 @@ const GithubButton: FC<GithubButtonProps> = ({ children, onClick }) => {
   };
 
   return (
-    <Button onClick={loginWithGithub} className="w-full flex items-center space-x-2">
-      <FaGithub size={20} color="#ffffff" />
+    <Button 
+      onClick={loginWithGithub}
+      className="w-full flex items-center space-x-2"
+      variant="outline"
+      >
+      <FaGithub size={20} className="text-foreground" />
       <span>{children}</span>
     </Button>
   );

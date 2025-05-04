@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Vehicle } from "@/types";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 //? Schema di validazione Zod per il form
 const formSchema = z.object({
@@ -91,10 +91,11 @@ export function VehicleForm({ vehicle, isEdit = false }: VehicleFormProps) {
       }
 
       //? Notifica di successo con toast
-      toast({
-        title: isEdit ? "Vehicle updated" : "Vehicle created",
-        description: isEdit ? "Your vehicle has been updated successfully" : "Your vehicle has been created successfully",
-      });
+      // toast({
+      //   title: isEdit ? "Vehicle updated" : "Vehicle created",
+      //   description: isEdit ? "Your vehicle has been updated successfully" : "Your vehicle has been created successfully",
+      // });
+      toast.success('Youre vehicle has been created successfully');
       
       //? Reindirizzamento alla lista dei veicoli e aggiornamento dei dati
       router.push("/vehicles");
@@ -102,11 +103,13 @@ export function VehicleForm({ vehicle, isEdit = false }: VehicleFormProps) {
     } catch (error) {
       //! Gestione errori con toast
       console.error(error);
-      toast({
-        title: "Error",
-        description: (error as Error).message || "Failed to save vehicle",
-        variant: "destructive",
-      });
+      // toast({
+      //   title: "Error",
+      //   description: (error as Error).message || "Failed to save vehicle",
+      //   variant: "destructive",
+      // });
+      toast.error('Failed to save vehicle');
+      
     } finally {
       setIsLoading(false);
     }
