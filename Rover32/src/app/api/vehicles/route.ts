@@ -31,8 +31,20 @@ export async function GET() {
     }
 
     //? Recupera tutti i veicoli dell'utente dal database
+    // Now that we've migrated the database, include all fields
     const vehicles = await db.vehicle.findMany({
       where: { userId: session.user.id },
+      select: {
+        id: true,
+        name: true,
+        ipAddress: true,
+        macAddress: true,  // Include the MAC address
+        uptimeHours: true,
+        controlHours: true,
+        kilometersDriven: true,
+        createdAt: true,
+        updatedAt: true
+      },
       orderBy: { createdAt: "desc" },
     });
 

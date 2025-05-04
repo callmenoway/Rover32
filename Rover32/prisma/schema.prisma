@@ -71,20 +71,36 @@ model VerificationToken {
 
 //? Modello Vehicle per gestire i veicoli degli utenti
 model Vehicle {
-  id             String   @id @default(cuid())         // ID univoco del veicolo
-  name           String                                // Nome personalizzato del veicolo
-  ipAddress      String                                // Indirizzo IP per la connessione al veicolo
-  macAddress     String   @unique                              // Indirizzo MAC opzionale per la connessione al veicolo
-  uptimeHours    Float    @default(0)                  // Ore totali di uptime del veicolo
-  controlHours   Float    @default(0)                  // Ore totali di controllo/movimento del veicolo
-  kilometersDriven Float   @default(0)                 // Chilometri totali percorsi dal veicolo
-  userId         String                                // ID dell'utente proprietario del veicolo
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade) // Relazione all'utente
-  createdAt      DateTime @default(now())              // Timestamp di creazione del veicolo
-  updatedAt      DateTime @updatedAt                   // Timestamp dell'ultimo aggiornamento
+  id             String         @id @default(cuid())
+  name           String
+  ipAddress      String
+  macAddress     String         @unique
+  uptimeHours    Float          @default(0)
+  controlHours   Float          @default(0)
+  kilometersDriven Float        @default(0)
+  userId         String
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stats          VehicleStats[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 
-  //? Indici
-  @@index([userId])                                 // Indice sulla colonna userId per prestazioni
+  @@index([userId])
+}
+
+model VehicleStats {
+  id              String   @id @default(cuid())
+  date            DateTime @db.Date
+  uptimeHours     Float    @default(0)
+  controlHours    Float    @default(0)
+  kilometersDriven Float   @default(0)
+  vehicleId       String
+  vehicle         Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([vehicleId, date])
+  @@index([vehicleId])
+  @@index([date])
 }
 
 //? Modello ApiKey per gestire le chiavi API degli utenti

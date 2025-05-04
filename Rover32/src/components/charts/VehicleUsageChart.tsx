@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { useParams } from "next/navigation"
 
 import {
   Card,
@@ -26,11 +27,6 @@ import {
   SelectValue,
 } from "@/src/components/ui/select"
 
-// Sample data - to be replaced with actual data from DB
-const chartData = [
-  { date: "2024-04-01", uptime: 2.2, control: 1.5 },
-]
-
 const chartConfig = {
   usage: {
     label: "Usage",
@@ -45,22 +41,50 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function VehicleUsageChart() {
-  const [timeRange, setTimeRange] = React.useState("90d")
+interface VehicleStatsData {
+  date: string;
+  uptime: number;
+  control: number;
+}
 
-  const filteredData = chartData.filter((item) => {
-    const date = new Date(item.date)
-    const referenceDate = new Date("2024-06-30")
-    let daysToSubtract = 90
-    if (timeRange === "30d") {
-      daysToSubtract = 30
-    } else if (timeRange === "7d") {
-      daysToSubtract = 7
+export function VehicleUsageChart() {
+  const params = useParams();
+  const vehicleId = params.id as string;
+  
+  const [timeRange, setTimeRange] = React.useState("90d")
+  const [chartData, setChartData] = React.useState<VehicleStatsData[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    async function fetchStats() {
+      setIsLoading(true);
+      try {
+        // Convert timeRange to days
+        const days = timeRange === "7d" ? 7 : timeRange === "30d" ? 30 : 90;
+        
+        // Fetch data from our API
+        const response = await fetch(`/api/vehicles/stats/${vehicleId}?days=${days}`);
+        
+        if (!response.ok) {
+          throw new Error("Failed to fetch stats");
+        }
+        
+        const data = await response.json();
+        setChartData(data.stats || []);
+      } catch (error) {
+        console.error("Error loading vehicle stats:", error);
+        // Set empty array on error
+        setChartData([]);
+      } finally {
+        setIsLoading(false);
+      }
     }
-    const startDate = new Date(referenceDate)
-    startDate.setDate(startDate.getDate() - daysToSubtract)
-    return date >= startDate
-  })
+
+    fetchStats();
+  }, [vehicleId, timeRange]);
+
+  // Filter data based on time range (though our API already does this)
+  const filteredData = chartData;
 
   return (
     <Card>
@@ -68,7 +92,7 @@ export function VehicleUsageChart() {
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle>Vehicle Usage Statistics</CardTitle>
           <CardDescription>
-            Showing uptime and control hours over time
+            {isLoading ? "Loading data..." : `Showing uptime and control hours over ${timeRange === "7d" ? "7 days" : timeRange === "30d" ? "30 days" : "3 months"}`}
           </CardDescription>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>
@@ -92,89 +116,99 @@ export function VehicleUsageChart() {
         </Select>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-        <ChartContainer
-          config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
-          style={{
-            "--color-uptime": "hsl(210, 100%, 50%)",
-            "--color-control": "hsl(190, 90%, 50%)",
-          } as React.CSSProperties}
-        >
-          <AreaChart data={filteredData}>
-            <defs>
-              <linearGradient id="fillUptime" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="hsl(210, 100%, 50%)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="hsl(210, 100%, 50%)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="fillControl" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="hsl(190, 90%, 50%)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="hsl(190, 90%, 50%)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-            </defs>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              minTickGap={32}
-              tickFormatter={(value) => {
-                const date = new Date(value)
-                return date.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })
-              }}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={
-                <ChartTooltipContent
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                    })
-                  }}
-                  indicator="dot"
-                />
-              }
-            />
-            <Area
-              dataKey="control"
-              type="natural"
-              fill="url(#fillControl)"
-              stroke="hsl(190, 90%, 50%)"
-              strokeWidth={2}
-              stackId="a"
-            />
-            <Area
-              dataKey="uptime"
-              type="natural"
-              fill="url(#fillUptime)"
-              stroke="hsl(210, 100%, 50%)"
-              strokeWidth={2}
-              stackId="a"
-            />
-            <ChartLegend content={<ChartLegendContent />} />
-          </AreaChart>
-        </ChartContainer>
+        {isLoading ? (
+          <div className="flex justify-center items-center h-[250px]">
+            <p className="text-muted-foreground">Loading statistics...</p>
+          </div>
+        ) : chartData.length === 0 ? (
+          <div className="flex justify-center items-center h-[250px]">
+            <p className="text-muted-foreground">No data available for this time period</p>
+          </div>
+        ) : (
+          <ChartContainer
+            config={chartConfig}
+            className="aspect-auto h-[250px] w-full"
+            style={{
+              "--color-uptime": "hsl(210, 100%, 50%)",
+              "--color-control": "hsl(190, 90%, 50%)",
+            } as React.CSSProperties}
+          >
+            <AreaChart data={filteredData}>
+              <defs>
+                <linearGradient id="fillUptime" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="5%"
+                    stopColor="hsl(210, 100%, 50%)"
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="hsl(210, 100%, 50%)"
+                    stopOpacity={0.1}
+                  />
+                </linearGradient>
+                <linearGradient id="fillControl" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="5%"
+                    stopColor="hsl(190, 90%, 50%)"
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="hsl(190, 90%, 50%)"
+                    stopOpacity={0.1}
+                  />
+                </linearGradient>
+              </defs>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                minTickGap={32}
+                tickFormatter={(value) => {
+                  const date = new Date(value)
+                  return date.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })
+                }}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={
+                  <ChartTooltipContent
+                    labelFormatter={(value) => {
+                      return new Date(value).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })
+                    }}
+                    indicator="dot"
+                  />
+                }
+              />
+              <Area
+                dataKey="control"
+                type="natural"
+                fill="url(#fillControl)"
+                stroke="hsl(190, 90%, 50%)"
+                strokeWidth={2}
+                stackId="a"
+              />
+              <Area
+                dataKey="uptime"
+                type="natural"
+                fill="url(#fillUptime)"
+                stroke="hsl(210, 100%, 50%)"
+                strokeWidth={2}
+                stackId="a"
+              />
+              <ChartLegend content={<ChartLegendContent />} />
+            </AreaChart>
+          </ChartContainer>
+        )}
       </CardContent>
     </Card>
   )
