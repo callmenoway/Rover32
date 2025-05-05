@@ -47,6 +47,7 @@ export function safeUrl(url: string): string {
     const isSafe = ["http:", "https:"].includes(urlObj.protocol);
     return isSafe ? url : "";
   } catch (e) {
+    console.error("Error: " + e);
     return "";
   }
 }

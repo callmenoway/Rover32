@@ -29,7 +29,7 @@ export default function TechStackCoreFramework() {
                         <li>API Routes: Backend functionality without separate server setup</li>
                         <li>TypeScript integration: Strong typing system to reduce bugs</li>
                         <li>Nested Layouts: Improves performance because if you are using same components in more pages, it render only one time instead of rendering every time the entire page</li>
-                        <li>Caching: With server-side rendering Next.Js implements caching from the server side. This help a lot because the user can't modify what is cached so it also improve security</li>
+                        <li>Caching: With server-side rendering Next.Js implements caching from the server side. This help a lot because the user can&apos;t modify what is cached so it also improve security</li>
                     </ul>
                     <p className='text-lg mb-4'>
                         You can find all this optimized feautures at {" "}

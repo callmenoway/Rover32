@@ -15,7 +15,8 @@ model User {
   id            String    @id @default(cuid())      // ID univoco, generato usando cuid
   username      String?                             // Username opzionale dell'utente
   email         String    @unique                   // Email univoca dell'utente, usata per il login
-  emailVerified DateTime?                           // Timestamp di verifica dell'email
+  emailVerified DateTime?    
+  image         String?                        // Timestamp di verifica dell'email
   password      String                              // Password hashata dell'utente
   accounts      Account[]                           // Relazione agli account di autenticazione esterni
   sessions      Session[]                           // Relazione alle sessioni attive dell'utente

@@ -102,7 +102,7 @@ export function SignInForm() {
         
         // Reset the CAPTCHA if there's an error
         if (turnstileRef.current) {
-          // @ts-ignore - The type definition doesn't include reset method
+          // @ts-expect-error - The type definition doesn't include reset method
           turnstileRef.current.reset();
         }
       } else {
@@ -117,7 +117,7 @@ export function SignInForm() {
       
       // Reset the CAPTCHA on error
       if (turnstileRef.current) {
-        // @ts-ignore - The type definition doesn't include reset method
+        // @ts-expect-error - The type definition doesn't include reset method
         turnstileRef.current.reset();
       }
     }

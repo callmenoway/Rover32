@@ -3,7 +3,6 @@ import { Metadata } from "next";
 import { db } from "@/src/lib/db";
 import { getCurrentUser } from "@/src/lib/session";
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/card";
-import { Badge } from "@/src/components/ui/badge";
 import { Button } from "@/src/components/ui/button";
 import { ArrowLeft, Clock, Gauge, RouteOff } from "lucide-react";
 import Link from "next/link";

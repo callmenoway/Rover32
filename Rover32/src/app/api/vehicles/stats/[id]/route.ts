@@ -73,6 +73,7 @@ export async function GET(
 }
 
 // Helper function to fill in missing dates with zero values
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function fillMissingDates(stats: any[], startDate: Date, endDate: Date) {
   const dateMap = new Map();
   

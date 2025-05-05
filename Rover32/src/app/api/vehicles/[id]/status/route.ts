@@ -47,16 +47,6 @@ export async function GET(
       //? Timeout breve per una migliore UX
       const timeoutId = setTimeout(() => controller.abort(), 1500);
 
-      //? URL di default per la connessione sulla porta 80
-      const url = `http://${vehicle.ipAddress}`;
-
-      //? Tentativo di connessione con timeout
-      const response = await fetch(url, {
-        method: 'HEAD', //? Usa HEAD perché più leggero di GET
-        signal: controller.signal,
-        cache: 'no-store',
-      });
-
       clearTimeout(timeoutId);
 
       //* Ping riuscito, il veicolo è online

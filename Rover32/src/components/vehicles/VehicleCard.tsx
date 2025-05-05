@@ -37,6 +37,7 @@ export function VehicleCard({ vehicle }: VehicleCardProps) {
     const interval = setInterval(checkStatus, 30000);
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vehicle.id]);
 
   //? Funzione per verificare lo stato online del veicolo

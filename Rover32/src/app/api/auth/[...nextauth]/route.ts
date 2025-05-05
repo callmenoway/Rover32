@@ -3,7 +3,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import DiscordProvider from "next-auth/providers/discord";
-import { User } from "next-auth";
 import bcrypt from 'bcrypt';
 import { PrismaClient } from '@prisma/client';
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -33,19 +32,13 @@ async function verifyCaptcha(token: string): Promise<boolean> {
   return data.success;
 }
 
-// Define the structure of your credentials
-interface CredentialsType {
-  email: string;
-  password: string;
-  captchaToken: string;
-}
-
 // Create a custom adapter based on PrismaAdapter
 const customPrismaAdapter = {
   ...PrismaAdapter(prisma),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   createUser: async (data: any) => {
     // Filter out fields that don't exist in your schema
-    const { name, image, ...validData } = data;
+    const { name, ...validData } = data;
     
     // Create username based on incoming data
     const username = name?.replace(/\s+/g, '_').toLowerCase() || 
@@ -161,7 +154,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     // Add signIn callback to properly handle account creation and redirects
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       // For OAuth sign-ins, allow linking accounts by email
       if (account?.provider) {
         try {

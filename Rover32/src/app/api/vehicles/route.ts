@@ -115,6 +115,7 @@ export async function POST(req: Request) {
 
     // Check for Prisma unique constraint error (likely duplicate MAC address)
     if (typeof error === 'object' && error !== null && 'code' in error && error.code === 'P2002') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const target = (error as any).meta?.target;
       if (target && target.includes('macAddress')) {
         return NextResponse.json({ 

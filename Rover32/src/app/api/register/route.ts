@@ -50,6 +50,7 @@ export async function POST(req: Request) {
         });
 
         //? Rimozione della password dall'oggetto utente restituito
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password: newUserPassword, ...rest } = newUser;
 
         //? Risposta con successo
@@ -57,6 +58,7 @@ export async function POST(req: Request) {
 
     } catch (error) {
         //! Gestione degli errori generici
+        console.error("Error: " + error);
         return NextResponse.json({ message: "Something went wrong!" }, { status: 500 });
     }
 }

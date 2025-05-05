@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { Copy, Key, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/src/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/src/components/ui/card";
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
 import { Skeleton } from "@/src/components/ui/skeleton";
@@ -40,7 +39,6 @@ interface ApiKey {
 }
 
 export function ApiKeyList() {
-  const router = useRouter();
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -227,7 +225,7 @@ export function ApiKeyList() {
             <DialogHeader>
               <DialogTitle>Create New API Key</DialogTitle>
               <DialogDescription>
-                Give your API key a descriptive name to remember where it's used.
+                Give your API key a descriptive name to remember where it&apos;s used.
               </DialogDescription>
             </DialogHeader>
             
@@ -257,7 +255,7 @@ export function ApiKeyList() {
                 </div>
                 <p className="mt-1 break-all text-xs">{newApiKey.key}</p>
                 <p className="mt-2 text-xs text-muted-foreground">
-                  Make sure to copy your API key now. You won't be able to see it again!
+                  Make sure to copy your API key now. You won&apos;t be able to see it again!
                 </p>
               </div>
             )}

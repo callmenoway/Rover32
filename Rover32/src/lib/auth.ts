@@ -5,7 +5,6 @@ import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import DiscordProvider from "next-auth/providers/discord";
 import { db } from "./db";
-import * as z from "zod";
 
 //! Rimozione dell'importazione diretta di bcrypt per evitare problemi sul client
 // import { compare } from "bcrypt";
@@ -16,6 +15,7 @@ const customPrismaAdapter = {
     ...PrismaAdapter(db),
 
     //? Sovrascrive il metodo createUser per gestire username
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     createUser: async (userData: any) => {
         const { name, ...validUserData } = userData;
 
@@ -81,7 +81,7 @@ export const authOptions: NextAuthOptions = {
                 email: { label: "Email", type: "email", placeholder: "jsmith@mail.com" },
                 password: { label: "Password", type: "password" }
             },
-            async authorize(credentials, req) {
+            async authorize(credentials) {
                 //! Validazione dei dati di input
                 if (!credentials?.email || !credentials?.password) {
                     throw new Error("Email and password are required.");
@@ -98,6 +98,7 @@ export const authOptions: NextAuthOptions = {
                 }
 
                 //! Importa bcrypt dinamicamente solo sul server
+                // eslint-disable-next-line @typescript-eslint/no-require-imports
                 const { compare } = require("bcrypt");
 
                 //? Verifica la password

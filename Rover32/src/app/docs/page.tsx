@@ -39,7 +39,7 @@ export default function DocumentationPage() {
         <ol>
           <li>Charge the battery fully before first use</li>
           <li>Power on the device using the main switch</li>
-          <li>Connect to the Rover32 Wi-Fi network (default password: "rover32pass")</li>
+          <li>Connect to the Rover32 Wi-Fi network (default password: &quot;rover32pass&quot;)</li>
           <li>Navigate to http://rover32.local in your web browser</li>
           <li>Follow the on-screen instructions to complete setup</li>
         </ol>
@@ -51,7 +51,7 @@ export default function DocumentationPage() {
 
         <ul>
           <li><strong>ESP32 Microcontroller</strong>: The brain of the rover, handling all processing and connectivity</li>
-          <li><strong>Motor Driver</strong>: Controls the movement of the rover's wheels</li>
+          <li><strong>Motor Driver</strong>: Controls the movement of the rover&apos;s wheels</li>
           <li><strong>Camera Module</strong>: Provides visual feedback and streaming capabilities</li>
           <li><strong>OLED Display</strong>: Shows status information and animations</li>
           <li><strong>Lighting System</strong>: Includes headlights, taillights, and status indicators</li>

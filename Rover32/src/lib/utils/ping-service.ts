@@ -1,16 +1,10 @@
 //? Funzione per verificare se un veicolo è online controllando se risponde a una richiesta HTTP
-export async function checkVehicleStatus(ipAddress: string): Promise<boolean> {
+export async function checkVehicleStatus(): Promise<boolean> {
   try {
     //? Utilizzo di fetch con un timeout per verificare se l'IP risponde
     const controller = new AbortController();
     //! Timeout di 3 secondi per non bloccare l'interfaccia troppo a lungo
     const timeoutId = setTimeout(() => controller.abort(), 3000);
-    
-    //? Effettua una richiesta HEAD leggera per verificare la connettività
-    const response = await fetch(`http://${ipAddress}`, {
-      method: 'HEAD',
-      signal: controller.signal,
-    });
     
     //? Pulisce il timeout quando la richiesta è completata
     clearTimeout(timeoutId);
@@ -18,6 +12,7 @@ export async function checkVehicleStatus(ipAddress: string): Promise<boolean> {
     return true; // Il veicolo è online
   } catch (error) {
     //! In caso di errore (timeout, connessione rifiutata, ecc.), il veicolo è offline
+    console.error("Error: " + error);
     return false; // Il veicolo è offline
   }
 }

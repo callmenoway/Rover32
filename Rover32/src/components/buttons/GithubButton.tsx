@@ -2,7 +2,6 @@ import { FC, ReactNode } from "react";
 import { Button } from "@/src/components/ui/button";
 import { FaGithub } from "react-icons/fa";
 import { signIn } from "next-auth/react";
-import { VariantProps } from 'class-variance-authority';
 
 interface GithubButtonProps {
   children: ReactNode;

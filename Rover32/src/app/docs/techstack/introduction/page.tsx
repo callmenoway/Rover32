@@ -4,7 +4,6 @@ import {
     Card,
     CardContent
 } from "@/src/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/src/components/ui/tabs";
 import { CodeIcon, ServerIcon, ShieldIcon, Database, MonitorIcon } from "lucide-react";
 
 //? Componente principale della pagina di introduzione al tech stack

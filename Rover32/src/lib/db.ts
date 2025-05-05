@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 //? Dichiarazione globale per estendere il namespace NodeJS
 declare global {
   //? Estende l'interfaccia NodeJS.Global per includere prisma
+  // eslint-disable-next-line no-var
   var prisma: PrismaClient | undefined;
 }
 
