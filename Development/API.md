@@ -50,9 +50,10 @@ Il server in caso di chiave **CORRETTA** rispondera':
 
 ## DATA
 
-Per aggiornare i dati nel db basta fare 1 richiesta di get all'inizio quando ci colleghiamo al veicolo e ogni tot secondi fare una richiesta post sul db per aggiornare i dati. quando facciamo la richiesta GET è importante salvare i dati su un .json e ogni volta che si aggiornano aggiornarli li in modo che quando ogni tot secondi facciamo la richiesta POST per aggiornare i dati nel db basta che importa il json del veicolo.
+Appena ci colleghiamo ad un veicolo è importante che i dati vengano syncati. Infatti ogni veicolo avrà delle statistiche che vengono aggiornate ogni tot minuti (per esempio ogni 10 minuti). Quindi se per esempio chiudo il programma al minuto 9 e i dati non sono ancora stati inviati perchè mancava 1 minuto è importante che quei dati siano salvati su un json locale dell'applicazione e al connettersi successivo della macchina quei dati devono essere pushati sull'api. Successivamente tutte le richieste saranno ogni tot minuti e basta.
 
 La richiesta **POST** per aggiornare i dati si struttura così:
+> <https://dominio/api/app/vehicle/receive>
 
 ```json
 {
@@ -90,3 +91,5 @@ in caso di successo:
     "message": "Vehicle stats updated successfully"
 }
 ```
+
+è importante sapere che questa richiesta è incrementale quindi quando aggiorniamo i dati, una volta pushati sull'api si possono resettare e far tornare a 0. Poi è il backend dell'api a occuparsi di sommarli.
