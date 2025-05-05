@@ -100,7 +100,7 @@ const SignUpForm = () => {
     
     // Use direct signIn with the correct callbackUrl
     signIn(provider, { 
-      callbackUrl: '/vehicles',
+      callbackUrl: `${window.location.origin}/vehicles`,
       redirect: true
     });
   };

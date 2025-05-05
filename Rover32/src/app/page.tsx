@@ -133,7 +133,7 @@ function HomeContent() {
                 variant="outline"
                 size="sm"
                 className="flex items-center gap-1"
-                onClick={() => signOut({ callbackUrl: '/' })}
+                onClick={() => signOut({ callbackUrl: window.location.origin })}
               >
                 <LogOut className="h-4 w-4" />
                 <span className="hidden sm:inline">Logout</span>
@@ -176,7 +176,7 @@ function HomeContent() {
           Rover32
         </h1>
         <p className="max-w-xl text-lg text-gray-600 dark:text-gray-300 mb-8">
-          Control your ESP32 S3 CAM powered rover directly from your browser. Real-time camera feed, joystick control, and much more!
+          A web-based control platform for your ESP32 car. View your Rover32 statistics directly from the web and manage your API keys.
         </p>
         {isAuthenticated ? (
           //? Pulsante principale per utenti autenticati

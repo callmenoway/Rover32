@@ -80,7 +80,7 @@ export function SignInForm() {
     setIsThirdPartyLogin(true);
     
     // Sign in with the provider
-    signIn(provider, { callbackUrl: '/vehicles' });
+    signIn(provider, { callbackUrl: `${window.location.origin}/vehicles` });
   };
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
