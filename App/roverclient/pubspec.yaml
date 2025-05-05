@@ -1,0 +1,29 @@
+name: roverclient
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.1.0
+  shared_preferences: ^2.2.0
+  provider: ^6.0.5
+  flutter_joystick: ^0.0.3
+  image: ^4.0.15
+  tcp_socket_connection: ^0.3.1
+  equatable: ^2.0.5
+  flutter_secure_storage: 8.1.0
+  # For physical controllers/gamepads handling
+  flutter_keyboard_visibility: ^5.4.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true

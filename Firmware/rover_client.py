@@ -102,8 +102,8 @@ class RoverClient:
         feature_frame = ttk.Frame(ctrl_frame, padding="10")
         feature_frame.pack(fill=tk.X)
         
-        ttk.Button(feature_frame, text="Lights On", command=lambda: self.send_command("lights_on")).pack(side=tk.LEFT, padx=5)
-        ttk.Button(feature_frame, text="Lights Off", command=lambda: self.send_command("lights_off")).pack(side=tk.LEFT, padx=5)
+        ttk.Button(feature_frame, text="Lights On", command=lambda: self.send_command("onHeadlights")).pack(side=tk.LEFT, padx=5)
+        ttk.Button(feature_frame, text="Lights Off", command=lambda: self.send_command("offHeadlights")).pack(side=tk.LEFT, padx=5)
         ttk.Button(feature_frame, text="Drift 1", command=lambda: self.send_command("drift")).pack(side=tk.LEFT, padx=5)
         ttk.Button(feature_frame, text="Drift 2", command=lambda: self.send_command("drift1")).pack(side=tk.LEFT, padx=5)
     
