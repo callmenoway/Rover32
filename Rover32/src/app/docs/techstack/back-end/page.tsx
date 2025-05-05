@@ -1,11 +1,32 @@
 import React from 'react';
 import { Card, CardContent } from "@/src/components/ui/card";
 import { ServerCog } from "lucide-react";
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/src/components/ui/breadcrumb";
 
 export default function TechStackBackEnd() {
     return(
         <div className='container mx-auto py-10 px-4 md:px-6'>
-            <div className='max-w-5xl mx-auto'>
+            <div className='max-w-5xl mx-auto'></div>
+                <Breadcrumb className="mb-6">
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/docs">Documentation</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/docs/techstack">Technology Stack</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbPage>Back-End</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
+
                 <div className="space-y-4 text-center mb-12">
                     <div className="inline-block p-2 bg-primary/10 rounded-full">
                         <ServerCog className="h-10 w-10 text-primary" />
@@ -36,23 +57,6 @@ export default function TechStackBackEnd() {
                     </ul>
 
                     <p className='text-lg mb-4'>
-                        <a href={"https://trpc.io"} style={{ color: '#0044ff', fontWeight: 'bold', textDecoration: 'underline' }}>
-                            tRPC
-                        </a>
-                    </p>
-
-                    <p className='text-lg mb-4'>
-                        End-to-end typesafe API framework:
-                    </p>
-
-                    <ul className="list-disc pl-6 text-lg mb-4 space-y-2">
-                        <li>Type safety: Full TypeScript support across client and server</li>
-                        <li>API contracts: Automatically shared types between frontend and backend</li>
-                        <li>Procedure-based: Structured approach to API endpoints</li>
-                        <li>Middleware support: Authentication and request validation</li>
-                    </ul>
-
-                    <p className='text-lg mb-4'>
                         <a href={"https://zod.dev"} style={{ color: '#0044ff', fontWeight: 'bold', textDecoration: 'underline' }}>
                             Zod
                         </a>
@@ -69,7 +73,6 @@ export default function TechStackBackEnd() {
                     </ul>
                 </CardContent>
             </Card>
-            </div>
         </div>
     );
 }

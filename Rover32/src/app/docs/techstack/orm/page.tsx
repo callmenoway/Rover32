@@ -1,11 +1,32 @@
 import React from 'react';
 import { Card, CardContent } from "@/src/components/ui/card";
 import { Database } from "lucide-react";
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/src/components/ui/breadcrumb";
 
 export default function TechStackOrm() {
     return(
         <div className='container mx-auto py-10 px-4 md:px-6'>
-            <div className='max-w-5xl mx-auto'>
+            <div className='max-w-5xl mx-auto'></div>
+                <Breadcrumb className="mb-6">
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/docs">Documentation</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/docs/techstack">Technology Stack</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbPage>ORM</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
+
                 <div className="space-y-4 text-center mb-12">
                     <div className="inline-block p-2 bg-primary/10 rounded-full">
                         <Database className="h-10 w-10 text-primary" />
@@ -56,6 +77,5 @@ export default function TechStackOrm() {
                     </CardContent>
                 </Card>
             </div>
-        </div>
     );
 }

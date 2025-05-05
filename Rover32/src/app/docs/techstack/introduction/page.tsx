@@ -5,12 +5,32 @@ import {
     CardContent
 } from "@/src/components/ui/card";
 import { CodeIcon, ServerIcon, ShieldIcon, Database, MonitorIcon } from "lucide-react";
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/src/components/ui/breadcrumb";
 
 //? Componente principale della pagina di introduzione al tech stack
 export default function TechStackIntroduction() {
     return (
-        <div className="container mx-auto py-10 px-4 md:px-6">
-            <div className="max-w-5xl mx-auto">
+        <div className='container mx-auto py-10 px-4 md:px-6'>
+            <div className='max-w-5xl mx-auto'></div>
+                <Breadcrumb className="mb-6">
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/docs">Documentation</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/docs/techstack">Technology Stack</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbPage>Introduction</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
                 {/* Intestazione della pagina */}
                 <div className="space-y-4 text-center mb-12">
                     <div className="inline-block p-2 bg-primary/10 rounded-full">
@@ -68,7 +88,6 @@ export default function TechStackIntroduction() {
                         <p className="text-sm text-muted-foreground">0Auth and user authentication</p>
                     </Card>
                 </div>
-            </div>
         </div>
     );
 }
