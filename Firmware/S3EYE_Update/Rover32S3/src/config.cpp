@@ -2,8 +2,8 @@
 
 // -------- WiFi Credentials --------
 // These are now pointers so they can be changed at runtime
-const char *sta_ssid = "H2O-Fi";       // Your Wi-Fi SSID
-const char *sta_password = "10Lauretta!";  // Your Wi-Fi password
+const char *sta_ssid = "";       // Your Wi-Fi SSID
+const char *sta_password = "";  // Your Wi-Fi password
 
 // -------- Motor and Servo Pin Definitions --------
 // Left motor (L298N)
