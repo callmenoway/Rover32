@@ -1,8 +1,8 @@
 #include "config.h"
 
 // -------- WiFi Credentials --------
-const char *sta_ssid = "90:45:47";       // Your Wi-Fi SSID
-const char *sta_password = "Luc41312!";  // Your Wi-Fi password
+const char *sta_ssid = "";       // Your Wi-Fi SSID
+const char *sta_password = "";  // Your Wi-Fi password
 
 // -------- Motor and Servo Pin Definitions --------
 // Left motor (L298N)

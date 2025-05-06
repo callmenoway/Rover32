@@ -33,11 +33,11 @@
 #define PCLK_GPIO_NUM 22
 
 // ------------------ Wi-Fi Settings ------------------
-// const char *sta_ssid = "H2O-Fi";
-// const char *sta_password = "10Lauretta!";
+// const char *sta_ssid = "";
+// const char *sta_password = "";
 
-// const char *ap_ssid = "ESP32_RC_CAR";
-// const char *ap_password = "12345678";
+// const char *ap_ssid = "";
+// const char *ap_password = "";
 
 // ------------------- OLED Settings ------------------
 // use -1 to disable
