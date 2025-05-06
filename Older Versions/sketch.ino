@@ -23,8 +23,8 @@
 #define PCLK_GPIO_NUM 22
 
 // ------------------ Wi-Fi Settings ------------------
-const char *sta_ssid = "9asasd";
-const char *sta_password = "Luasdasdad";
+const char *sta_ssid = "";
+const char *sta_password = "";
 
 
 // ---------------- Motor and Servo Pin Definitions ----------------
