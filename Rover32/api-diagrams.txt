@@ -1,0 +1,207 @@
++------------------------------------------+
+|        ROVER32 SYSTEM - UML DIAGRAMS     |
++------------------------------------------+
+
+1. USER REGISTRATION
+--------------------
+
+  Client                API                   Database
+    |                    |                       |
+    |--- POST /api/user ---------------------------------> Validate input
+    |                    |                       |
+    |                    |------ Check if email exists --->|
+    |                    |<----- Result ----------------- |
+    |                    |                       |
+    |                    |------ Check if username exists->|
+    |                    |<----- Result ----------------- |
+    |                    |                       |
+    |                    |------ Hash password    |
+    |                    |------ Create user ----->|
+    |                    |<----- User created --------|
+    |<-- 201 User Created|                       |
+    |                    |                       |
+
+
+2. USER AUTHENTICATION (NextAuth)
+--------------------------------
+
+  Client           NextAuth         OAuth Provider    Database
+    |                 |                   |              |
+    |-- Login Request->|                   |              |
+    |                 |                   |              |
+    |                 |-- Redirect ------->|              |
+    |<- OAuth Redirect|                   |              |
+    |                 |                   |              |
+    |-- Auth Callback->|                   |              |
+    |                 |<-- User Profile --|              |
+    |                 |                   |              |
+    |                 |-- Find/Create User------------>|
+    |                 |<-- User Data -----------------|
+    |                 |                   |              |
+    |                 |-- Create Session ->|              |
+    |<- Session Cookie|                   |              |
+
+
+3. CREDENTIALS LOGIN
+------------------
+
+  Client           NextAuth       Auth Service     Database
+    |                 |                |              |
+    |-- POST /sign-in->|                |              |
+    |                 |-- Verify captcha>|              |
+    |                 |<- Captcha result|              |
+    |                 |                |              |
+    |                 |-- Find user by email -------->|
+    |                 |<-- User data or null ---------|
+    |                 |                |              |
+    |                 |-- Compare password>|              |
+    |                 |<- Password result|              |
+    |                 |                |              |
+    |<- JWT & Redirect|                |              |
+
+
+4. VEHICLE MANAGEMENT
+-------------------
+
+  Client          API            Session Service     Database
+    |              |                    |               |
+    |-- GET /api/vehicles>|                    |               |
+    |              |-- Get session ---->|               |
+    |              |<- Session data ----|               |
+    |              |                    |               |
+    |              |-- Find user's vehicles ----------->|
+    |              |<-- Vehicles list ----------------|
+    |              |                    |               |
+    |<- Vehicles JSON|                    |               |
+    |              |                    |               |
+    |-- POST /api/vehicles>|                    |               |
+    |              |-- Get session ---->|               |
+    |              |<- Session data ----|               |
+    |              |                    |               |
+    |              |-- Create vehicle -------------->|
+    |              |<-- Vehicle created -------------|
+    |              |                    |               |
+    |<- Vehicle JSON|                    |               |
+
+
+5. API KEY MANAGEMENT
+-------------------
+
+  Client          API Keys        Session Service     Database
+    |                |                    |              |
+    |-- POST /api/api-keys>|                    |              |
+    |                |-- Get session ---->|              |
+    |                |<- Session data ----|              |
+    |                |                    |              |
+    |                |-- Generate API key |              |
+    |                |-- Create API key ------------->|
+    |                |<-- API key created ------------|
+    |                |                    |              |
+    |<- API Key JSON  |                    |              |
+    |                |                    |              |
+    |-- GET /api/api-keys->|                    |              |
+    |                |-- Get session ---->|              |
+    |                |<- Session data ----|              |
+    |                |                    |              |
+    |                |-- Find user's API keys -------->|
+    |                |<-- API keys list --------------|
+    |                |                    |              |
+    |<- API Keys JSON |                    |              |
+
+
+6. VEHICLE STATISTICS COLLECTION
+-------------------------------
+
+  Mobile App          API                      Database
+     |                 |                          |
+     |-- POST /api/app/vehicle/receive ->|                          |
+     |                 |-- Verify API key ------->|
+     |                 |<-- API key result ------|
+     |                 |                          |
+     |                 |-- Find vehicle ---------->|
+     |                 |<-- Vehicle data ---------|
+     |                 |                          |
+     |                 |-- Update vehicle stats -->|
+     |                 |<-- Stats updated --------|
+     |                 |                          |
+     |                 |-- Create/update daily --->|
+     |                 |   stats record           |
+     |                 |<-- Stats record updated --|
+     |                 |                          |
+     |<- Success Response|                          |
+
+
+7. MOBILE APP AUTHENTICATION
+--------------------------
+
+  Mobile App              API                   Database
+     |                      |                       |
+     |-- POST /api/app/login ->|                       |
+     |                      |-- Verify API key ---->|
+     |                      |<-- API key with user--|
+     |                      |    and vehicles       |
+     |                      |                       |
+     |                      |-- Update last used --->|
+     |                      |    timestamp          |
+     |                      |<-- Updated ------------|
+     |                      |                       |
+     |<- User & Vehicles JSON|                       |
+     |                      |                       |
+
+
+8. VEHICLE STATISTICS RETRIEVAL
+-----------------------------
+
+  Client             API                Session Service      Database
+    |                 |                       |                 |
+    |-- GET /api/vehicles/stats/[id] ->|                       |                 |
+    |                 |-- Get session ----->|                 |
+    |                 |<- Session data -----|                 |
+    |                 |                       |                 |
+    |                 |-- Verify vehicle ownership ----------->|
+    |                 |<-- Verification result ---------------|
+    |                 |                       |                 |
+    |                 |-- Get vehicle stats for period ------->|
+    |                 |<-- Raw stats data --------------------|
+    |                 |                       |                 |
+    |                 |-- Fill missing dates  |                 |
+    |                 |   and format data     |                 |
+    |                 |                       |                 |
+    |<- Stats JSON     |                       |                 |
+
+
+DATABASE ENTITY RELATIONSHIPS
+----------------------------
+
+  +--------+       +------------+       +----------+
+  |  User  |<----->|   Account  |       |  Session |
+  +--------+       +------------+       +----------+
+     ^ | ^                                    ^
+     | | |                                    |
+     | | +------------------------------------+
+     | |
+     | v                  +---------------+
+     | +-----------------+|   ApiKey     |
+     |                    +---------------+
+     v
+  +--------+       +---------------+
+  | Vehicle |<----->| VehicleStats |
+  +--------+       +---------------+
+
+
+API AUTHORIZATION FLOWS
+----------------------
+
+  Public APIs (No Auth):
+  - POST /api/user
+  - POST /api/register
+  - POST /api/auth/[...nextauth]
+
+  API Key Auth:
+  - POST /api/app/login
+  - POST /api/app/vehicle/receive
+
+  Session Auth (NextAuth):
+  - GET/POST /api/vehicles
+  - GET/POST /api/api-keys
+  - GET /api/vehicles/stats/[id]
