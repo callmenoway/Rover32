@@ -9,7 +9,7 @@ export function Logo({ className }: { className?: string }) {
         alt="Rover32 Logo" 
         width={512} 
         height={512} 
-        className="h-32 w-32" // Aumentato da h-8 w-8 a h-12 w-12
+        className="h-auto w-32 object-contain" // Modified to maintain aspect ratio
       />
     </div>
   )

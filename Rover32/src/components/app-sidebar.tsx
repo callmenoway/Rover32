@@ -1,7 +1,7 @@
 "use client"
 
 //? Importazioni delle icone e componenti
-import { Home, Layers, KeyRound, FileSearch, FileCode2, Cpu, Microchip, MonitorSmartphone, ServerCog, Database, Braces, ChevronDown, ChevronRight, Sun, Moon } from "lucide-react"
+import { Home, Grid2x2, Key, Layers, Scroll, CloudDownload, KeyRound, FileSearch, FileCode2, AppWindow, Wallpaper, MonitorSmartphone, ServerCog, Database, Braces, ChevronDown, ChevronRight, Sun, Moon } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -31,6 +31,21 @@ const items = [
     icon: FileSearch,
   },
   {
+    title: "Quickstart",
+    url: "/docs/quickstart",
+    icon: CloudDownload,
+  },
+  {
+    title: "Api",
+    url: "/docs/api",
+    icon: Key,
+  },
+  {
+    title: "Schematic",
+    url: "/docs/schematic",
+    icon: Scroll,
+  },
+  {
     title: "Techstack",
     icon: Layers,
     subItems: [
@@ -43,12 +58,12 @@ const items = [
     ]
   },
   {
-    title: "Hardware",
-    icon: Cpu,
+    title: "App",
+    icon: AppWindow,
     subItems: [
-      { title: "Components", url: "/docs/hardware/components", icon: Microchip },
-      { title: "Schematics", url: "/docs/hardware/schematics", icon: Microchip },
-      { title: "Assembly", url: "/docs/hardware/assembly", icon: Microchip },
+      { title: "Introduction", url: "/docs/app/introduction", icon: FileCode2 },
+      { title: "Overview", url: "/docs/app/overview", icon: Wallpaper },
+      { title: "Interface", url: "/docs/app/interface", icon: Grid2x2 },
     ]
   },
 ]

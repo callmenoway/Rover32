@@ -33,7 +33,7 @@ export default function DocumentationPage() {
 
       <ul className="list-disc pl-6 mb-6 space-y-2">
       <li><strong>ESP32 Microcontroller</strong>: The brain of the rover, handling all processing and connectivity</li>
-      <li><strong>Motor Driver</strong>: Controls the movement of the rover&apos;s wheels</li>
+      <li><strong>Motors</strong>: Controls the movement of the rover&apos;s wheels</li>
       <li><strong>Camera Module</strong>: Provides visual feedback and streaming capabilities</li>
       <li><strong>OLED Display</strong>: Shows status information and animations</li>
       <li><strong>Lighting System</strong>: Includes headlights, taillights, and status indicators</li>
@@ -47,7 +47,7 @@ export default function DocumentationPage() {
         <h3 className="text-xl font-semibold mb-3 dark:text-white">System Components</h3>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-          <strong className="dark:text-white">ESP32 Firmware</strong>: <span className="dark:text-gray-300">Written in C++ using the ESP-IDF framework and Arduino libraries,
+          <strong className="dark:text-white">ESP32 Firmware</strong>: <span className="dark:text-gray-300">Written in C++ using the Platform IO,
           the firmware manages camera capture, motor control, and TCP communication</span>
           </li>
           <li>

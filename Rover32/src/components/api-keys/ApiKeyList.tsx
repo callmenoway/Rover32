@@ -229,19 +229,19 @@ export function ApiKeyList() {
               </DialogDescription>
             </DialogHeader>
             
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="name">API Key Name</Label>
-                <Input 
-                  id="name" 
-                  placeholder="e.g., Mobile App, Home Assistant" 
-                  value={newKeyName}
-                  onChange={(e) => setNewKeyName(e.target.value)}
-                />
+            {!newApiKey ? (
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="name">API Key Name</Label>
+                  <Input 
+                    id="name" 
+                    placeholder="e.g., Mobile App, Home Assistant" 
+                    value={newKeyName}
+                    onChange={(e) => setNewKeyName(e.target.value)}
+                  />
+                </div>
               </div>
-            </div>
-            
-            {newApiKey && (
+            ) : (
               <div className="rounded-md bg-muted p-4">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium">API Key</p>
@@ -339,7 +339,7 @@ export function ApiKeyList() {
                   </div>
                   <div className="ml-4">
                     <p className="text-sm text-muted-foreground">
-                      ID: {apiKey.id}
+                      ID: <span className="font-mono">{apiKey.id}</span>
                     </p>
                     {apiKey.lastUsed && (
                       <p className="text-sm text-muted-foreground">

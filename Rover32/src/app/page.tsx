@@ -11,25 +11,6 @@ import * as React from "react"
 import { useSession, SessionProvider, signOut } from "next-auth/react"
 import { ThemeToggle } from "@/src/components/theme/ThemeToggle"
 
-//? Dati dei componenti mostrati nel menu di navigazione
-const components = [
-  {
-    title: "Control Interface",
-    href: "/vehicles",
-    description: "Drive and steer your ESP32 Rover in real-time from the browser.",
-  },
-  {
-    title: "Live Camera",
-    href: "/vehicles",
-    description: "View the rover's onboard live camera feed.",
-  },
-  {
-    title: "Custom Commands",
-    href: "/vehicles",
-    description: "Send low-level commands directly to the ESP32 board.",
-  },
-]
-
 //? Componente wrapper che utilizza il SessionProvider
 function HomeContent() {
   //? Ottiene lo stato della sessione utente
@@ -73,29 +54,12 @@ function HomeContent() {
                     <ListItem href="/docs" title="Introduction">
                       Learn how to set up your Rover32 system.
                     </ListItem>
-                    <ListItem href="/docs/installation" title="Installation">
+                    <ListItem href="/docs/quickstart" title="Installation">
                       How to flash the firmware and connect the rover.
                     </ListItem>
                     <ListItem href="/docs/api" title="API Reference">
-                      Full control and camera streaming API.
+                      Statistics of vehicles and api calls.
                     </ListItem>
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>Components</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                    {components.map((component) => (
-                      <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                      >
-                        {component.description}
-                      </ListItem>
-                    ))}
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -154,9 +118,6 @@ function HomeContent() {
           <div className="flex flex-col space-y-2">
             <Link href="/docs" className="p-2 hover:bg-muted rounded-md">
               Getting Started
-            </Link>
-            <Link href="/vehicles" className="p-2 hover:bg-muted rounded-md">
-              Components
             </Link>
             <Link href="/docs" className="p-2 hover:bg-muted rounded-md">
               Documentation
