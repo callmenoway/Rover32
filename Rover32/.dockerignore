@@ -1,0 +1,36 @@
+# Git
+.git
+.gitignore
+
+# Node.js
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Next.js build output
+.next
+out
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Development and IDE files
+.vscode
+.idea
+*.swp
+*.swo
+
+# Documentation and other unnecessary files
+README.md
+LICENSE
+*.log
+*.md
