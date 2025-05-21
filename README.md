@@ -38,20 +38,26 @@
   <img src="https://img.shields.io/badge/JSON-000000.svg?style=flat&logo=JSON&logoColor=white" />
   <img src="https://img.shields.io/badge/npm-CB3837.svg?style=flat&logo=npm&logoColor=white" />
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E.svg?style=flat&logo=JavaScript&logoColor=black" />
-  <img src="https://img.shields.io/badge/React-61DAFB.svg?style=flat&logo=React&logoColor=black" />
+  <img src="https://img.shields.io/badge/React-%2320232a.svg?logo=react&logoColor=%2361DAFB" />
   <img src="https://img.shields.io/badge/NextJs-000000?style=flat&logo=next.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/tailwindcss-0F172A?&logo=tailwindcss" />
   <img src="https://img.shields.io/badge/Dart-0175C2.svg?style=flat&logo=Dart&logoColor=white" />
-  <img src="https://img.shields.io/badge/C++-00599C.svg?style=flat&logo=C++&logoColor=white" />
+  <img src="https://img.shields.io/badge/C++-%2300599C.svg?logo=c%2B%2B&logoColor=white" />
   <img src="https://img.shields.io/badge/XML-005FAD.svg?style=flat&logo=XML&logoColor=white" />
   <img src="https://img.shields.io/badge/Flutter-02569B.svg?style=flat&logo=Flutter&logoColor=white" />
-  <img src="https://img.shields.io/badge/CMake-064F8C.svg?style=flat&logo=CMake&logoColor=white" />
+  <img src="https://img.shields.io/badge/shadcn%2Fui-000?logo=shadcnui&logoColor=fff" />
+  <img src="https://img.shields.io/badge/CSS-1572B6?logo=css3&logoColor=fff" />
+  <img src="https://img.shields.io/badge/Node.js-6DA55F?logo=node.js&logoColor=white" />
   <img src="https://img.shields.io/badge/Python-3776AB.svg?style=flat&logo=Python&logoColor=white" />
   <img src="https://img.shields.io/badge/TypeScript-3178C6.svg?style=flat&logo=TypeScript&logoColor=white" />
+  <img src="https://img.shields.io/badge/Postgres-%23316192.svg?logo=postgresql&logoColor=white" />
+  <img src="https://img.shields.io/badge/Supabase-3FCF8E?logo=supabase&logoColor=fff" />
   <img src="https://img.shields.io/badge/Prisma-2D3748.svg?style=flat&logo=Prisma&logoColor=white" />
   <img src="https://img.shields.io/badge/Zod-3E67B1.svg?style=flat&logo=Zod&logoColor=white" />
   <img src="https://img.shields.io/badge/ESLint-4B32C3.svg?style=flat&logo=ESLint&logoColor=white" />
-  <img src="https://img.shields.io/badge/Kotlin-7F52FF.svg?style=flat&logo=Kotlin&logoColor=white" />
+  <img src="https://img.shields.io/badge/React_Router-CA4245?logo=react-router&logoColor=white" />
   <img src="https://img.shields.io/badge/YAML-CB171E.svg?style=flat&logo=YAML&logoColor=white" />
+  <img src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff" />
 </p>
 
 ## Overview
