@@ -128,26 +128,103 @@ Or visit the [online documentation](https://github.com/callmenoway/rover32) for:
 - Hardware schematics
 - Troubleshooting information
 
-## Technology Stack
+## Running with nodejs
 
-### Backend
-- **Next.js API Routes**: Server-side functionality and API endpoints
-- **tRPC**: End-to-end typesafe API framework
-- **Zod**: Schema validation for runtime type checking
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/Rover32.git
+   cd Rover32
+   ```
 
-### Frontend
-- **React**: Component-based UI library
-- **TypeScript**: Static type-checking for JavaScript
-- **Tailwind CSS**: Utility-first CSS framework
-- **shadcn/ui**: Reusable, accessible UI components
-- **Radix UI**: Unstyled, accessible UI primitives
-- **Lucide React**: SVG icon library
+2. Create an `.env` file from the example:
+   ```bash
+   cp .env.example .env
+   ```
 
-### Database & ORM
-- **Prisma**: Modern ORM for database access
-- **Supabase**: PostgreSQL-based database with integrated authentication
+3. Edit the `.env` file with your actual configuration values:
+   - Generate a `NEXTAUTH_SECRET` (you can use `openssl rand -base64 32`)
+   - Add your OAuth provider credentials
+   - Configure other settings as needed
 
-## Setup Instructions
+4. Install the dependencies:
+   ```bash
+   npm install
+   ```
+
+5. Run the website:
+   ```bash
+   next dev
+   ```
+
+   or you can just use node with:
+   ```bash
+   npm run dev
+   ```
+
+## Running with Docker
+
+### Prerequisites
+
+- Docker and Docker Compose installed on your system
+- Git (to clone the repository)
+
+### Quick Start
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/Rover32.git
+   cd Rover32
+   ```
+
+2. Create an `.env` file from the example:
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Edit the `.env` file with your actual configuration values:
+   - Generate a `NEXTAUTH_SECRET` (you can use `openssl rand -base64 32`)
+   - Add your OAuth provider credentials
+   - Configure other settings as needed
+
+4. Build and start the containers:
+   ```bash
+   docker-compose up -d
+   ```
+
+5. Run database migrations:
+   ```bash
+   docker-compose exec app npx prisma migrate deploy
+   ```
+
+### Stopping the Application
+
+To stop the application:
+
+```bash
+docker-compose down
+```
+
+To stop and remove all data (including the database):
+
+```bash
+docker-compose down -v
+```
+
+### Troubleshooting
+
+- If you encounter database connection issues, ensure the Postgres container is healthy:
+  ```bash
+  docker-compose ps
+  ```
+
+- To view logs:
+  ```bash
+  docker-compose logs -f app
+  ```
+
+## Development
+
+For development without Docker, please refer to the development documentation.
 
 1. **Clone the Repository**:
    ```bash
