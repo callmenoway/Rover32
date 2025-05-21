@@ -2,7 +2,57 @@
   <img src="./Rover32/public/rover32.png">
 </p>
 
-# Rover32
+<h1 align="center">ROVER32</h1>
+
+<p align="center"><i>Empowering seamless control for your robotic adventures.</i></p>
+
+<p align="center">
+  <!-- Ultimo commit -->
+  <img src="https://img.shields.io/github/last-commit/callmenoway/Rover32?style=flat&logo=git&logoColor=white&color=0080ff" />
+  
+  <!-- Linguaggio principale -->
+  <img src="https://img.shields.io/github/languages/top/callmenoway/Rover32?style=flat&color=0080ff" />
+
+  <!-- Conteggio linguaggi -->
+  <img src="https://img.shields.io/github/languages/count/callmenoway/Rover32?style=flat&color=0080ff" />
+
+  <!-- Dimensione repo -->
+  <img src="https://img.shields.io/github/repo-size/callmenoway/Rover32?style=flat&color=0080ff&logo=database&logoColor=white" />
+
+  <!-- Stars -->
+  <img src="https://img.shields.io/github/stars/callmenoway/Rover32?style=flat&color=0080ff&logo=github&logoColor=white" />
+
+  <!-- Forks -->
+  <img src="https://img.shields.io/github/forks/callmenoway/Rover32?style=flat&color=0080ff&logo=code-fork&logoColor=white" />
+
+  <!-- Issues aperti -->
+  <img src="https://img.shields.io/github/issues/callmenoway/Rover32?style=flat&color=0080ff&logo=githubissues&logoColor=white" />
+
+  <!-- Licenza -->
+  <img src="https://img.shields.io/github/license/callmenoway/Rover32?style=flat&color=0080ff&logo=open-source-initiative&logoColor=white" />
+</p>
+
+<p align="center"><i>Built with the tools and technologies:</i></p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/JSON-000000.svg?style=flat&logo=JSON&logoColor=white" />
+  <img src="https://img.shields.io/badge/npm-CB3837.svg?style=flat&logo=npm&logoColor=white" />
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E.svg?style=flat&logo=JavaScript&logoColor=black" />
+  <img src="https://img.shields.io/badge/React-61DAFB.svg?style=flat&logo=React&logoColor=black" />
+  <img src="https://img.shields.io/badge/NextJs-000000?style=flat&logo=next.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/Dart-0175C2.svg?style=flat&logo=Dart&logoColor=white" />
+  <img src="https://img.shields.io/badge/C++-00599C.svg?style=flat&logo=C++&logoColor=white" />
+  <img src="https://img.shields.io/badge/XML-005FAD.svg?style=flat&logo=XML&logoColor=white" />
+  <img src="https://img.shields.io/badge/Flutter-02569B.svg?style=flat&logo=Flutter&logoColor=white" />
+  <img src="https://img.shields.io/badge/CMake-064F8C.svg?style=flat&logo=CMake&logoColor=white" />
+  <img src="https://img.shields.io/badge/Python-3776AB.svg?style=flat&logo=Python&logoColor=white" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6.svg?style=flat&logo=TypeScript&logoColor=white" />
+  <img src="https://img.shields.io/badge/Prisma-2D3748.svg?style=flat&logo=Prisma&logoColor=white" />
+  <img src="https://img.shields.io/badge/Zod-3E67B1.svg?style=flat&logo=Zod&logoColor=white" />
+  <img src="https://img.shields.io/badge/ESLint-4B32C3.svg?style=flat&logo=ESLint&logoColor=white" />
+  <img src="https://img.shields.io/badge/Kotlin-7F52FF.svg?style=flat&logo=Kotlin&logoColor=white" />
+  <img src="https://img.shields.io/badge/YAML-CB171E.svg?style=flat&logo=YAML&logoColor=white" />
+</p>
 
 ## Overview
 
@@ -60,7 +110,10 @@ The Rover32 system consists of multiple integrated components:
 
 Scan this QR code to access the complete documentation:
 
-![Documentation QR Code](./Rover32/public/qr-code.png)
+<p align="center">
+  <img src="./Rover32/public/qr-code.png" alt="Documentation QR Code" width="300" />
+</p>
+
 
 Or visit the [online documentation](https://github.com/callmenoway/rover32) for:
 
