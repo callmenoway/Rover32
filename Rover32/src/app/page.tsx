@@ -10,6 +10,7 @@ import { LogOut, Menu } from "lucide-react"
 import * as React from "react"
 import { useSession, SessionProvider, signOut } from "next-auth/react"
 import { ThemeToggle } from "@/src/components/theme/ThemeToggle"
+import LetterGlitch from '@/src/components/ui/LetterGlitch'
 
 //? Componente wrapper che utilizza il SessionProvider
 function HomeContent() {
@@ -20,8 +21,8 @@ function HomeContent() {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-      <nav className="border-b shadow-sm px-4 py-2 bg-white dark:bg-gray-950 flex justify-between items-center">
+    <div className="min-h-screen h-screen flex flex-col overflow-hidden bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <nav className="border-b shadow-sm px-4 py-2 bg-white dark:bg-gray-950 flex justify-between items-center z-10">
         {/* Logo for mobile */}
         <div className="flex md:hidden">
           <Logo className="h-8 w-8" />
@@ -114,7 +115,7 @@ function HomeContent() {
 
       {/* Mobile Navigation Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white dark:bg-gray-950 border-b shadow-sm p-4">
+        <div className="md:hidden bg-white dark:bg-gray-950 border-b shadow-sm p-4 z-10">
           <div className="flex flex-col space-y-2">
             <Link href="/docs" className="p-2 hover:bg-muted rounded-md">
               Getting Started
@@ -131,25 +132,24 @@ function HomeContent() {
         </div>
       )}
 
-      {/* Sezione Hero principale */}
-      <main className="flex flex-col flex-1 items-center justify-center text-center px-4 py-20">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-400">
-          Rover32
-        </h1>
-        <p className="max-w-xl text-lg text-gray-600 dark:text-gray-300 mb-8">
-          A web-based control platform for your ESP32 car. View your Rover32 statistics directly from the web and manage your API keys.
-        </p>
-        {isAuthenticated ? (
-          //? Pulsante principale per utenti autenticati
-          <Link href="/vehicles">
-            <Button size="lg">Manage Vehicles</Button>
-          </Link>
-        ) : (
-          //? Pulsante principale per nuovi utenti
-          <Link href="/sign-in">
-            <Button size="lg">Get Started</Button>
-          </Link>
-        )}
+      {/* Sezione Hero principale con LetterGlitch */}
+      <main className="flex flex-col flex-1 overflow-hidden">
+        <div className="relative w-full h-full">
+          <LetterGlitch 
+            glitchColors={['#2b4539', '#61dca3', '#61b3dc']} 
+            glitchSpeed={50} 
+            centerVignette={true} 
+            outerVignette={false} 
+            smooth={true} 
+          />
+          
+          {/* Text overlay for Rover32 - dark text in light mode, white text in dark mode */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <h1 className="text-6xl md:text-8xl font-bold text-gray-900 dark:text-white tracking-wider">
+              Rover32
+            </h1>
+          </div>
+        </div>
       </main>
     </div>
   )

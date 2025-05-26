@@ -40,26 +40,6 @@ const nextConfig = {
     
     return config;
   },
-
-  //SE SUCCEDE QUALCOSA ELIMINARE QUESTA PARTE---------------------------------------------------------------------
-  output: 'standalone', // Creates a standalone build that doesn't require copying the entire node_modules folder
-  swcMinify: true,
-  images: {
-    domains: [
-      'avatars.githubusercontent.com',
-      'lh3.googleusercontent.com',
-      'cdn.discordapp.com',
-      // Add other domains if needed for image sources
-    ],
-  },
-  transpilePackages: [
-    // Add packages that need transpilation if any
-  ],
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  //---------------------------------------------------------------------------------------------------------------------
-
   typescript: {
     // Ignore build errors related to the params type issue
     ignoreBuildErrors: true,
