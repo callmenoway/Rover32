@@ -11,6 +11,7 @@ import * as React from "react"
 import { useSession, SessionProvider, signOut } from "next-auth/react"
 import { ThemeToggle } from "@/src/components/theme/ThemeToggle"
 import LetterGlitch from '@/src/components/ui/LetterGlitch'
+import SplitText from "@/src/components/ui/SplitText";
 
 //? Componente wrapper che utilizza il SessionProvider
 function HomeContent() {
@@ -19,6 +20,12 @@ function HomeContent() {
   const isLoading = status === "loading"
   const isAuthenticated = status === "authenticated"
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
+
+  const handleAnimationComplete = () => {
+
+    console.log('All letters have animated!');
+
+  };
 
   return (
     <div className="min-h-screen h-screen flex flex-col overflow-hidden bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
@@ -143,11 +150,34 @@ function HomeContent() {
             smooth={true} 
           />
           
-          {/* Text overlay for Rover32 - dark text in light mode, white text in dark mode */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <h1 className="text-6xl md:text-8xl font-bold text-gray-900 dark:text-white tracking-wider">
-              Rover32
-            </h1>
+            <SplitText
+
+              text="Welcome to Rover32!"
+
+              className="text-6xl md:text-8xl font-bold text-white dark:text-white tracking-wider"
+
+              delay={100}
+
+              duration={0.6}
+
+              ease="power3.out"
+
+              splitType="chars"
+
+              from={{ opacity: 0, y: 40 }}
+
+              to={{ opacity: 1, y: 0 }}
+
+              threshold={0.1}
+
+              rootMargin="-100px"
+
+              textAlign="center"
+
+              onLetterAnimationComplete={handleAnimationComplete}
+
+            />
           </div>
         </div>
       </main>

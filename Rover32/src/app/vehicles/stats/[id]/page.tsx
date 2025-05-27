@@ -8,7 +8,7 @@ import { ArrowLeft, Clock, Gauge, RouteOff } from "lucide-react";
 import Link from "next/link";
 import { VehicleUsageChart } from "@/src/components/charts/VehicleUsageChart";
 import { ThemeToggle } from "@/src/components/theme/ThemeToggle";
-
+import CountUp from '@/src/components/ui/CountUp'
 interface VehicleStatsPageProps {
   params: {
     id: string;
@@ -71,11 +71,21 @@ export default async function VehicleStatsPage({ params }: VehicleStatsPageProps
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">
+            <CountUp
+              from={0}
+              to={vehicle.uptimeHours !== null && vehicle.uptimeHours !== undefined 
+                  ? Number(vehicle.uptimeHours)
+                  : 0}
+              separator=","
+              direction="up"
+              duration={1}
+              className="count-up-text text-3xl font-bold"
+            />
+            {/* <div className="text-3xl font-bold">
               {vehicle.uptimeHours !== null && vehicle.uptimeHours !== undefined 
                 ? Number(vehicle.uptimeHours).toFixed(1)
                 : "0.0"}
-            </div>
+            </div> */}
             <p className="text-muted-foreground">Hours</p>
           </CardContent>
         </Card>
@@ -89,11 +99,21 @@ export default async function VehicleStatsPage({ params }: VehicleStatsPageProps
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">
+            <CountUp
+              from={0}
+              to={vehicle.controlHours !== null && vehicle.controlHours !== undefined 
+                ? Number(vehicle.controlHours)
+                : 0}
+              separator=","
+              direction="up"
+              duration={1}
+              className="count-up-text text-3xl font-bold"
+            />
+            {/* <div className="text-3xl font-bold">
               {vehicle.controlHours !== null && vehicle.controlHours !== undefined 
                 ? Number(vehicle.controlHours).toFixed(1)
                 : "0.0"}
-            </div>
+            </div> */}
             <p className="text-muted-foreground">Hours</p>
           </CardContent>
         </Card>
@@ -107,11 +127,21 @@ export default async function VehicleStatsPage({ params }: VehicleStatsPageProps
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">
+            <CountUp
+              from={0}
+              to={vehicle.kilometersDriven !== null && vehicle.kilometersDriven !== undefined 
+                ? Number(vehicle.kilometersDriven)
+                : 0}
+              separator=","
+              direction="up"
+              duration={1}
+              className="count-up-text text-3xl font-bold"
+            />
+            {/* <div className="text-3xl font-bold">
               {vehicle.kilometersDriven !== null && vehicle.kilometersDriven !== undefined 
                 ? Number(vehicle.kilometersDriven).toFixed(2)
                 : "0.00"}
-            </div>
+            </div> */}
             <p className="text-muted-foreground">Kilometers</p>
           </CardContent>
         </Card>
