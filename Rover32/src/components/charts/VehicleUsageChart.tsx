@@ -33,11 +33,11 @@ const chartConfig = {
   },
   uptime: {
     label: "Uptime Hours",
-    color: "hsl(210, 100%, 50%)", // Blue color
+    color: "hsl(210, 100%, 50%)",
   },
   control: {
     label: "Control Hours",
-    color: "hsl(190, 90%, 50%)", // Light blue/cyan color
+    color: "hsl(190, 90%, 50%)",
   },
 } satisfies ChartConfig
 
@@ -73,7 +73,6 @@ export function VehicleUsageChart() {
         setChartData(data.stats || []);
       } catch (error) {
         console.error("Error loading vehicle stats:", error);
-        // Set empty array on error
         setChartData([]);
       } finally {
         setIsLoading(false);
@@ -83,7 +82,6 @@ export function VehicleUsageChart() {
     fetchStats();
   }, [vehicleId, timeRange]);
 
-  // Filter data based on time range (though our API already does this)
   const filteredData = chartData;
 
   return (

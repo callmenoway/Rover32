@@ -36,7 +36,6 @@ export default async function VehicleStatsPage({ params }: VehicleStatsPageProps
     return notFound();
   }
 
-  // Resolve params before using them
   const resolvedParams = await Promise.resolve(params);
   const vehicleId = resolvedParams.id;
   
@@ -62,7 +61,6 @@ export default async function VehicleStatsPage({ params }: VehicleStatsPageProps
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {/* Uptime Stats Card */}
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
@@ -90,7 +88,6 @@ export default async function VehicleStatsPage({ params }: VehicleStatsPageProps
           </CardContent>
         </Card>
 
-        {/* Control Hours Card */}
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
@@ -118,7 +115,6 @@ export default async function VehicleStatsPage({ params }: VehicleStatsPageProps
           </CardContent>
         </Card>
 
-        {/* Distance Traveled Card */}
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
@@ -148,7 +144,6 @@ export default async function VehicleStatsPage({ params }: VehicleStatsPageProps
       </div>
 
       <div className="grid grid-cols-1 gap-6">
-        {/* Vehicle Information Card */}
         <Card>
           <CardHeader>
             <CardTitle>Vehicle Information</CardTitle>
@@ -175,7 +170,6 @@ export default async function VehicleStatsPage({ params }: VehicleStatsPageProps
           </CardContent>
         </Card>
 
-        {/* Usage Chart */}
         <VehicleUsageChart />
       </div>
     </div>

@@ -5,12 +5,12 @@ import { signIn } from "next-auth/react";
 
 interface GithubButtonProps {
   children: ReactNode;
-  onClick?: () => void; // Add optional onClick prop
+  onClick?: () => void;
 }
 
 const GithubButton: FC<GithubButtonProps> = ({ children, onClick }) => {
   const loginWithGithub = async () => {
-    if (onClick) await onClick(); // Call onClick if provided
+    if (onClick) await onClick();
     await signIn("github");
   };
 

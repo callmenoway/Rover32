@@ -22,5 +22,3 @@ export type Vehicle = {
 export type VehicleStatus = "online" | "offline" | "unknown";
 
 //TODO Aggiungere tipi per i dati dei sensori del veicolo
-//TODO Aggiungere tipi per le statistiche di utilizzo
-//TODO Aggiungere tipi per i comandi personalizzati

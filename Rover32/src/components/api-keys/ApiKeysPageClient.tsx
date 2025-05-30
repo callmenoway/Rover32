@@ -6,7 +6,6 @@ import { ChevronLeft } from "lucide-react";
 import { ThemeToggle } from "@/src/components/theme/ThemeToggle";
 import dynamic from 'next/dynamic';
 
-// Dynamic import with no SSR for the ApiKeyList component
 const ApiKeyList = dynamic(
   () => import('@/src/components/api-keys/ApiKeyList').then(mod => mod.ApiKeyList),
   { ssr: false }

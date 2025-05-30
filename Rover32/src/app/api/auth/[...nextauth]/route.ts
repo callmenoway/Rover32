@@ -7,12 +7,13 @@ import bcrypt from 'bcrypt';
 import { PrismaClient } from '@prisma/client';
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
+//! Inizializza il client Prisma per interagire con il database
 const prisma = new PrismaClient();
 
-// Use environment variable for Turnstile secret key
+//? Recupera la chiave segreta di Turnstile dagli environment variables
 const TURNSTILE_SECRET_KEY = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY as string;
 
-// Function to verify Turnstile token
+//! Funzione per verificare il token CAPTCHA di Cloudflare Turnstile
 async function verifyCaptcha(token: string): Promise<boolean> {
   const response = await fetch(
     'https://challenges.cloudflare.com/turnstile/v0/siteverify',
@@ -29,28 +30,28 @@ async function verifyCaptcha(token: string): Promise<boolean> {
   );
 
   const data = await response.json();
-  return data.success;
+  return data.success; //? Restituisce true se la verifica ha successo
 }
 
-// Create a custom adapter based on PrismaAdapter
+//! Adattatore personalizzato basato su PrismaAdapter per gestire la creazione utente
 const customPrismaAdapter = {
   ...PrismaAdapter(prisma),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   createUser: async (data: any) => {
-    // Filter out fields that don't exist in your schema
+    //? Rimuove i campi non presenti nello schema
     const { name, ...validData } = data;
     
-    // Create username based on incoming data
+    //? Genera uno username a partire dal nome o dall'email
     const username = name?.replace(/\s+/g, '_').toLowerCase() || 
                     data.email?.split('@')[0] || 
                     `user_${Math.random().toString(36).substring(2, 10)}`;
     
-    // Create user with valid fields
+    //? Crea l'utente con i campi validi e password vuota di default
     const user = await prisma.user.create({
       data: {
         ...validData,
         username,
-        password: "", // Add default empty password
+        password: "", //? Password vuota per utenti OAuth
       },
     });
     return user;
@@ -58,7 +59,7 @@ const customPrismaAdapter = {
 };
 
 export const authOptions: NextAuthOptions = {
-  adapter: customPrismaAdapter,
+  adapter: customPrismaAdapter, //? Usa l'adattatore personalizzato
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -68,53 +69,54 @@ export const authOptions: NextAuthOptions = {
         captchaToken: { label: "CAPTCHA Token", type: "text" }
       },
       async authorize(credentials) {
+        //? Controlla che tutte le credenziali siano presenti
         if (!credentials?.email || !credentials?.password || !credentials?.captchaToken) {
           throw new Error("Missing credentials");
         }
         
-        // Verify the CAPTCHA token
+        //? Verifica il token CAPTCHA
         const captchaVerified = await verifyCaptcha(credentials.captchaToken);
         if (!captchaVerified) {
           throw new Error("CAPTCHA verification failed");
         }
         
         try {
-          // Find the user by email
+          //? Cerca l'utente tramite email
           const user = await prisma.user.findUnique({
             where: {
               email: credentials.email
             }
           });
           
-          // If user not found, return null
+          //? Se l'utente non esiste, errore
           if (!user) {
             throw new Error("Invalid email or password");
           }
           
-          // Check if password matches
+          //? Verifica la password tramite bcrypt
           const passwordMatch = await bcrypt.compare(credentials.password, user.password);
           
           if (!passwordMatch) {
             throw new Error("Invalid email or password");
           }
           
-          // Return user data for the session
+          //? Restituisce i dati utente per la sessione
           return {
             id: user.id,
             email: user.email,
             username: user.username || user.email.split('@')[0],
-            // Add any other user properties needed for the session
+            //? Altri campi utente se necessari
           };
         } catch (error) {
           console.error("Authentication error:", error);
           throw new Error("Authentication failed");
         } finally {
-          // Disconnect from Prisma to prevent connection leaks
+          //? Disconnette Prisma per evitare memory leak
           await prisma.$disconnect();
         }
       }
     }),
-    // Add OAuth providers
+    //? Provider OAuth: Google, GitHub, Discord
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
@@ -129,15 +131,15 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   session: {
-    strategy: "jwt",
+    strategy: "jwt", //? Usa JWT per la gestione della sessione
   },
   pages: {
-    signIn: '/sign-in',  // Changed from '/signin' to '/sign-in' to match your route structure
-    error: '/auth/error', // This should point to a valid error page
+    signIn: '/sign-in',  //! Pagina personalizzata per il login
+    error: '/auth/error', //? Pagina per la gestione degli errori
   },
   callbacks: {
+    //? Callback per aggiungere dati custom al JWT
     async jwt({ token, user }) {
-      // If the user object exists, it means we're signing in
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -145,6 +147,7 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
+    //? Callback per aggiungere dati custom alla sessione
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id as string;
@@ -153,12 +156,11 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    // Add signIn callback to properly handle account creation and redirects
+    //? Callback per gestire la creazione/linking degli account OAuth
     async signIn({ user, account }) {
-      // For OAuth sign-ins, allow linking accounts by email
       if (account?.provider) {
         try {
-          // First check if this OAuth account already exists
+          //? Verifica se l'account OAuth esiste già
           const existingAccount = await prisma.account.findFirst({
             where: {
               provider: account.provider,
@@ -166,17 +168,17 @@ export const authOptions: NextAuthOptions = {
             }
           });
           
-          // If the account already exists, no need to create it again
+          //? Se esiste già, non fare nulla
           if (existingAccount) {
             return true;
           }
           
-          // Check if there's a user with this email
+          //? Cerca utente tramite email
           const existingUser = await prisma.user.findUnique({
             where: { email: user.email as string }
           });
           
-          // If user exists but account doesn't, link the account
+          //? Se l'utente esiste ma l'account no, crea il collegamento
           if (existingUser) {
             try {
               await prisma.account.create({
@@ -195,35 +197,27 @@ export const authOptions: NextAuthOptions = {
                 }
               });
             } catch (err) {
-              // If account creation fails because it already exists, just continue
+              //? Se fallisce perché già esiste, ignora l'errore
               console.log("Account linking error (likely already exists):", err);
             }
           }
         } catch (error) {
           console.error("Error in signIn callback:", error);
-          // Still allow sign-in even if there's an error with account linking
+          //? Permetti comunque il login anche se il linking fallisce
         }
       }
-      
-      // Always return true to allow sign-in
-      return true;
+      return true; //? Permetti sempre il login
     },
-    
-    // Add redirect callback to properly handle redirection after sign-in
+    //? Callback per gestire i redirect dopo il login
     async redirect({ url, baseUrl }) {
-      // If the URL starts with the base URL, allow it
       if (url.startsWith(baseUrl)) return url;
-      
-      // If it's a relative URL, prefix it with the base URL
       if (url.startsWith("/")) return `${baseUrl}${url}`;
-      
-      // Otherwise, return to the base URL
       return baseUrl;
     }
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET, //? Chiave segreta per NextAuth
 };
 
-// Using Route Handler syntax for App Router
+//! Handler per le route GET e POST secondo la sintassi App Router di Next.js
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };

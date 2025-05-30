@@ -13,7 +13,6 @@ export default async function SignInPage() {
     redirect("/vehicles");
   }
   
-  // Renderizza direttamente il componente SignInForm senza wrapper aggiuntivi
   return <SignInForm />;
 }
 

@@ -6,12 +6,12 @@ import { hash } from "bcrypt";
 //? Schema per la validazione degli input dell'utente
 const userSchema = z
     .object({
-        username: z.string().min(1, 'Username is required').max(100),
-        email: z.string().min(1, 'Email is required').email('Invalid email'),
+        username: z.string().min(1, 'Username is required').max(100), //? Username obbligatorio, max 100 caratteri
+        email: z.string().min(1, 'Email is required').email('Invalid email'), //? Email obbligatoria e valida
         password: z
             .string()
-            .min(1, 'Password is required')
-            .min(8, 'Password must have than 8 characters')
+            .min(1, 'Password is required') //? Password obbligatoria
+            .min(8, 'Password must have than 8 characters') //? Password almeno 8 caratteri
     });
 
 //? Handler POST per la registrazione di un nuovo utente
@@ -26,6 +26,7 @@ export async function POST(req: Request) {
             where: { email: email }
         });
         if (existingUserByEmail) {
+            //! Email già registrata
             return NextResponse.json({ user: null, message: "User with this email already exists" }, { status: 409 });
         }
 
@@ -34,6 +35,7 @@ export async function POST(req: Request) {
             where: { username: username }
         });
         if (existingUserByUsername) {
+            //! Username già registrato
             return NextResponse.json({ user: null, message: "User with this username already exists" }, { status: 409 });
         }
 

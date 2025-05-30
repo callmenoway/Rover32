@@ -3,24 +3,25 @@ import { db } from "@/src/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/src/lib/auth";
 
+//? Funzione handler per la richiesta GET delle statistiche del veicolo
 export async function GET(
   req: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    // Get the user session
+    //? Ottieni la sessione utente dal server
     const session = await getServerSession(authOptions);
 
-    // Verify user authentication
+    //! Verifica che l'utente sia autenticato
     if (!session?.user?.id) {
       return NextResponse.json({ stats: [], message: "Unauthorized" }, { status: 401 });
     }
 
-    // Resolve params
+    //? Risolvi i parametri della richiesta
     const resolvedParams = await Promise.resolve(params);
     const vehicleId = resolvedParams.id;
 
-    // Verify vehicle ownership
+    //! Verifica che il veicolo appartenga all'utente
     const vehicle = await db.vehicle.findFirst({
       where: {
         id: vehicleId,
@@ -28,20 +29,21 @@ export async function GET(
       }
     });
 
+    //! Se il veicolo non esiste o non appartiene all'utente, restituisci errore
     if (!vehicle) {
       return NextResponse.json({ stats: [], message: "Vehicle not found or access denied" }, { status: 404 });
     }
 
-    // Parse query parameters for filtering
+    //? Estrai il parametro 'days' dalla query string, default a 90 giorni
     const url = new URL(req.url);
     const days = parseInt(url.searchParams.get('days') || '90');
     
-    // Calculate the date range
+    //? Calcola l'intervallo di date da considerare
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(endDate.getDate() - days);
 
-    // Get stats for the vehicle in the date range
+    //? Recupera le statistiche del veicolo nell'intervallo di date
     const stats = await db.vehicleStats.findMany({
       where: {
         vehicleId,
@@ -55,29 +57,43 @@ export async function GET(
       }
     });
 
-    // Format stats for the chart
-    const formattedStats = stats.map(stat => ({
-      date: stat.date.toISOString().split('T')[0], // Format as YYYY-MM-DD
+    //? Formatto le statistiche per il grafico (YYYY-MM-DD)
+    interface VehicleStat {
+      date: Date;
+      uptimeHours: number;
+      controlHours: number;
+    }
+
+    interface FormattedStat {
+      date: string;
+      uptime: number;
+      control: number;
+    }
+
+    const formattedStats: FormattedStat[] = stats.map((stat: VehicleStat): FormattedStat => ({
+      date: stat.date.toISOString().split('T')[0], //? Formatta la data
       uptime: stat.uptimeHours,
       control: stat.controlHours
     }));
 
-    // Fill in missing dates with zero values
+    //? Riempio le date mancanti con valori a zero
     const filledStats = fillMissingDates(formattedStats, startDate, endDate);
 
+    //? Restituisco la risposta con le statistiche
     return NextResponse.json({ stats: filledStats });
   } catch (error) {
+    //! Gestione degli errori generici
     console.error("Error fetching vehicle stats:", error);
     return NextResponse.json({ stats: [], message: "Failed to fetch vehicle stats" }, { status: 500 });
   }
 }
 
-// Helper function to fill in missing dates with zero values
+//? Funzione helper per riempire le date mancanti con valori a zero
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function fillMissingDates(stats: any[], startDate: Date, endDate: Date) {
   const dateMap = new Map();
   
-  // Create a map of existing dates
+  //? Mappa le date già presenti nelle statistiche
   stats.forEach(stat => {
     dateMap.set(stat.date, stat);
   });
@@ -85,11 +101,11 @@ function fillMissingDates(stats: any[], startDate: Date, endDate: Date) {
   const filledStats = [];
   const currentDate = new Date(startDate);
   
-  // Loop through each day in the range
+  //? Cicla ogni giorno nell'intervallo
   while (currentDate <= endDate) {
     const dateStr = currentDate.toISOString().split('T')[0];
     
-    // Use existing stat or create one with zeros
+    //? Usa la statistica esistente o crea una nuova con valori a zero
     if (dateMap.has(dateStr)) {
       filledStats.push(dateMap.get(dateStr));
     } else {
@@ -100,7 +116,7 @@ function fillMissingDates(stats: any[], startDate: Date, endDate: Date) {
       });
     }
     
-    // Move to next day
+    //? Passa al giorno successivo
     currentDate.setDate(currentDate.getDate() + 1);
   }
   

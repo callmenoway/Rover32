@@ -1,5 +1,6 @@
 'use client';
 
+//? Import dei moduli e delle dipendenze necessarie
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,10 +18,10 @@ import { NavigationMenu, NavigationMenuItem, NavigationMenuList, navigationMenuT
 import { useState, useRef } from 'react';
 import { Turnstile } from '@marsidev/react-turnstile';
 
-// Your Cloudflare Turnstile site key (replace with your actual key)
-const TURNSTILE_SITE_KEY = '0x4AAAAAABaVTxn_QOkTDwiB';
+//! Chiave pubblica per Cloudflare Turnstile
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY as string;
 
-//? Schema di validazione per il form di login
+//? Schema di validazione per il form di login usando Zod
 const FormSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email'),
   password: z
@@ -32,10 +33,10 @@ const FormSchema = z.object({
 
 //? Componente principale del form di login
 export function SignInForm() {
-  const router = useRouter();
-  const [isThirdPartyLogin, setIsThirdPartyLogin] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string>('');
-  const turnstileRef = useRef(null);
+  const router = useRouter(); //? Hook per la navigazione
+  const [isThirdPartyLogin, setIsThirdPartyLogin] = useState(false); //? Stato per login tramite provider esterni
+  const [captchaToken, setCaptchaToken] = useState<string>(''); //? Stato per il token CAPTCHA
+  const turnstileRef = useRef(null); //? Ref per il componente Turnstile
 
   //? Configurazione del form con react-hook-form e validazione zod
   const {
@@ -52,14 +53,14 @@ export function SignInForm() {
     }
   });
 
-  // Handle Turnstile CAPTCHA verification
+  //? Gestione della verifica del CAPTCHA
   const handleCaptchaVerify = (token: string) => {
     setCaptchaToken(token);
     setValue('captchaToken', token);
     clearErrors('captchaToken');
   };
 
-  // Handle Turnstile CAPTCHA expiration
+  //? Gestione della scadenza del CAPTCHA
   const handleCaptchaExpire = () => {
     setCaptchaToken('');
     setValue('captchaToken', '');
@@ -69,26 +70,27 @@ export function SignInForm() {
     });
   };
 
+  //? Gestione del login tramite provider OAuth (Google, GitHub, Discord)
   const handleOAuthSignIn = (provider: string) => {
     if (!captchaToken) {
       toast.error("Please complete the CAPTCHA verification first");
       return;
     }
     
-    // Clear any existing form errors
-    clearErrors();
-    setIsThirdPartyLogin(true);
+    clearErrors(); //? Pulisce eventuali errori del form
+    setIsThirdPartyLogin(true); //? Disabilita il form durante il login esterno
     
-    // Sign in with the provider
+    //? Avvia il login con il provider selezionato
     signIn(provider, { callbackUrl: `${window.location.origin}/vehicles` });
   };
 
+  //? Gestione dell'invio del form di login classico
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     //? Evita l'invio se è in corso un login con provider terzo
     if (isThirdPartyLogin) return;
     
     try {
-      // Include the CAPTCHA token in the sign-in data
+      //? Invia i dati di login, incluso il token CAPTCHA
       const signInData = await signIn('credentials', {
         email: data.email,
         password: data.password,
@@ -97,12 +99,12 @@ export function SignInForm() {
       });
 
       if (signInData?.error) {
-        toast.error(signInData.error);
+        toast.error(signInData.error); //? Mostra errore se presente
         setValue('password', '');
         
-        // Reset the CAPTCHA if there's an error
+        //? Reset del CAPTCHA in caso di errore
         if (turnstileRef.current) {
-          // @ts-expect-error - The type definition doesn't include reset method
+          // @ts-expect-error - Il type definition non include il metodo reset
           turnstileRef.current.reset();
         }
       } else {
@@ -115,9 +117,9 @@ export function SignInForm() {
       console.error("Unexpected error:", error);
       toast.error('Unexpected error, try again.');
       
-      // Reset the CAPTCHA on error
+      //? Reset del CAPTCHA in caso di errore
       if (turnstileRef.current) {
-        // @ts-expect-error - The type definition doesn't include reset method
+        // @ts-expect-error - Il type definition non include il metodo reset
         turnstileRef.current.reset();
       }
     }
@@ -125,6 +127,7 @@ export function SignInForm() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted px-4 relative">
+      {/* //! Video di sfondo */}
       <video
         id="background-video"
         loop
@@ -144,6 +147,7 @@ export function SignInForm() {
         Your browser does not support the video tag.
       </video>
 
+      {/* //? Navbar in alto */}
       <nav className="w-full fixed top-0 left-0 z-20 shadow-md" style={{ backgroundColor: 'transparent' }}>
         <div className="container mx-auto flex justify-between items-center px-4 py-2">
           <NavigationMenu>
@@ -158,14 +162,16 @@ export function SignInForm() {
         </div>
       </nav>
 
+      {/* //? Card principale del form */}
       <Card className="w-full max-w-md z-10">
         <CardHeader>
           <CardTitle className="text-2xl">Welcome back</CardTitle>
           <CardDescription>Sign in to your account</CardDescription>
         </CardHeader>
         <CardContent>
+          {/* //? Form di login */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-            {/* Add noValidate to prevent browser validation */}
+            {/* //? Campo email */}
             <div>
               <Input placeholder="Email" {...register('email')} disabled={isThirdPartyLogin} />
               {errors.email && (
@@ -173,6 +179,7 @@ export function SignInForm() {
               )}
             </div>
 
+            {/* //? Campo password */}
             <div>
               <Input
                 placeholder="Password"
@@ -185,7 +192,7 @@ export function SignInForm() {
               )}
             </div>
 
-            {/* Cloudflare Turnstile CAPTCHA */}
+            {/* //? CAPTCHA Cloudflare Turnstile */}
             <div className="flex justify-center my-4">
               <Turnstile
                 ref={turnstileRef}
@@ -198,16 +205,18 @@ export function SignInForm() {
               <p className="text-sm text-red-500 mt-1 text-center">{errors.captchaToken.message}</p>
             )}
 
+            {/* //? Bottone di invio */}
             <Button className="w-full mt-2" type="submit" disabled={isThirdPartyLogin || !captchaToken}>
               Sign in
             </Button>
 
+            {/* //? Separatore tra login classico e OAuth */}
             <div className="mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">
               or
             </div>
           </form>
           
-          {/* Move OAuth buttons outside the form */}
+          {/* //? Pulsanti per login tramite provider esterni */}
           <div className="flex flex-col space-y-2 mt-4">
             <GoogleButton 
               onClick={() => handleOAuthSignIn('google')}
@@ -225,6 +234,7 @@ export function SignInForm() {
               Sign in with Discord
             </DiscordButton>
             
+            {/* //? Link per la registrazione */}
             <div className="text-center mt-4">
               <p className="text-sm text-gray-500">
                 Don&apos;t have an account?{' '}

@@ -30,12 +30,10 @@ function HomeContent() {
   return (
     <div className="min-h-screen h-screen flex flex-col overflow-hidden bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
       <nav className="border-b shadow-sm px-4 py-2 bg-white dark:bg-gray-950 flex justify-between items-center z-10">
-        {/* Logo for mobile */}
         <div className="flex md:hidden">
           <Logo className="h-8 w-8" />
         </div>
         
-        {/* Desktop Navigation */}
         <div className="hidden md:block">
           <NavigationMenu>
             <NavigationMenuList>
@@ -81,7 +79,6 @@ function HomeContent() {
           </NavigationMenu>
         </div>
 
-        {/* Mobile menu button */}
         <button 
           className="md:hidden p-2"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -120,7 +117,6 @@ function HomeContent() {
         </div>
       </nav>
 
-      {/* Mobile Navigation Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white dark:bg-gray-950 border-b shadow-sm p-4 z-10">
           <div className="flex flex-col space-y-2">
@@ -139,7 +135,6 @@ function HomeContent() {
         </div>
       )}
 
-      {/* Sezione Hero principale con LetterGlitch */}
       <main className="flex flex-col flex-1 overflow-hidden">
         <div className="relative w-full h-full">
           <LetterGlitch 

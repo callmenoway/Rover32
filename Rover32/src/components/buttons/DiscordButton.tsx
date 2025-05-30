@@ -5,12 +5,12 @@ import { signIn } from "next-auth/react";
 
 interface DiscordButtonProps {
   children: ReactNode;
-  onClick?: () => void; // Add optional onClick prop
+  onClick?: () => void;
 }
 
 const DiscordButton: FC<DiscordButtonProps> = ({ children, onClick }) => {
   const loginWithDiscord = async () => {
-    if (onClick) await onClick(); // Call onClick if provided
+    if (onClick) await onClick();
     await signIn("discord");
   };
 

@@ -2,49 +2,40 @@ import { NextResponse } from 'next/server';
 import { db } from '@/src/lib/db';
 import * as z from 'zod';
 
+//? Schema di validazione dei dati ricevuti dal client
 const vehicleReceiveSchema = z.object({
-    apiKey: z.string().min(1, 'API key is required'),
-    macAddress: z.string().min(1, 'MAC address is required'),
-    date: z.string().optional(), // Optional date in 'YYYY-MM-DD' format
-    uptimeHours: z.number().min(0, 'Uptime hours must be a positive number'),
-    controlHours: z.number().min(0, 'Control hours must be a positive number'),
-    kilometersDriven: z.number().min(0, 'Kilometers driven must be a positive number'),
+    apiKey: z.string().min(1, 'API key is required'), //? Chiave API obbligatoria
+    macAddress: z.string().min(1, 'MAC address is required'), //? MAC obbligatorio
+    date: z.string().optional(), //? Data opzionale in formato 'YYYY-MM-DD'
+    uptimeHours: z.number().min(0, 'Uptime hours must be a positive number'), //? Ore di uptime >= 0
+    controlHours: z.number().min(0, 'Control hours must be a positive number'), //? Ore di controllo >= 0
+    kilometersDriven: z.number().min(0, 'Kilometers driven must be a positive number'), //? Km percorsi >= 0
 });
 
 export async function POST(req: Request) {
     try{
         const body = await req.json();
+        //? Parsing e validazione del body tramite Zod
         const { apiKey, macAddress, date, uptimeHours, controlHours, kilometersDriven } = vehicleReceiveSchema.parse(body);
 
-        // Parse date from request or use current date, handling timezone correctly
+        //? Parsing della data: se fornita, viene creata come UTC midnight, altrimenti si usa la data attuale
         let statsDate;
         if (date) {
-            // Create date with the format YYYY-MM-DDT00:00:00.000Z
-            // This ensures the date is treated as UTC midnight
-            statsDate = new Date(date + 'T00:00:00.000Z');
-            
-            // Alternative approach: create as local date and then normalize
-            // const tempDate = new Date(date);
-            // statsDate = new Date(Date.UTC(
-            //    tempDate.getFullYear(),
-            //    tempDate.getMonth(),
-            //    tempDate.getDate()
-            // ));
+            statsDate = new Date(date + 'T00:00:00.000Z'); //? Data fornita, forzata a mezzanotte UTC
         } else {
-            // Use current date and set to midnight UTC
             statsDate = new Date();
             statsDate = new Date(Date.UTC(
                 statsDate.getFullYear(),
                 statsDate.getMonth(),
                 statsDate.getDate()
-            ));
+            )); //? Data attuale, forzata a mezzanotte UTC
         }
 
         console.log(`Parsed date: ${statsDate.toISOString()}`);
         console.log(`Date string: ${date}`);
         console.log(`Local date: ${statsDate.toString()}`);
 
-        // Verify API key exists
+        //? Verifica che la chiave API esista e recupera l'utente associato
         const apiKeyRecord = await db.apiKey.findUnique({
             where: { key: apiKey },
             include: {
@@ -57,13 +48,14 @@ export async function POST(req: Request) {
         });
 
         if (!apiKeyRecord) {
+            //! API key non valida
             return NextResponse.json(
             { success: false, message: "Unauthorized: Invalid API key" },
             { status: 401 }
             );
         }
 
-        // Find vehicle by MAC address and verify it belongs to the API key's user
+        //? Cerca il veicolo tramite MAC e verifica che appartenga all'utente della chiave API
         const vehicle = await db.vehicle.findFirst({
             where: { 
                 macAddress: macAddress,
@@ -72,28 +64,28 @@ export async function POST(req: Request) {
         });
 
         if(!vehicle) {
+            //! Veicolo non trovato o non associato all'utente
             return NextResponse.json(
                 { success: false, message: "Unauthorized: Vehicle not found or does not belong to this user" },
                 { status: 401 }
             );
         }
 
-        // Update API key last used timestamp
+        //? Aggiorna il timestamp dell'ultimo utilizzo della chiave API
         await db.apiKey.update({
             where: { id: apiKeyRecord.id },
             data: { lastUsed: new Date() }
         });
 
-        // Debug logging
+        //? Log di debug
         console.log(`Processing request for vehicle: ${vehicle.id}`);
         console.log(`Date: ${statsDate.toISOString()}`);
         console.log(`Stats to add: Uptime=${uptimeHours}, Control=${controlHours}, KM=${kilometersDriven}`);
 
-        // Update vehicle total stats
+        //? Aggiorna i totali del veicolo
         await db.vehicle.update({
             where: { id: vehicle.id },
             data: {
-                // Increment total values
                 uptimeHours: { increment: uptimeHours },
                 controlHours: { increment: controlHours },
                 kilometersDriven: { increment: kilometersDriven }
@@ -102,7 +94,7 @@ export async function POST(req: Request) {
         console.log("Vehicle total stats updated successfully");
 
         try {
-            // Check if a stats record already exists for this date
+            //? Verifica se esiste già un record stats per questa data
             console.log("Checking for existing stats record...");
             const existingStats = await db.vehicleStats.findFirst({
                 where: {
@@ -113,7 +105,7 @@ export async function POST(req: Request) {
             console.log("Existing stats check completed:", existingStats ? "Found" : "Not found");
 
             if (existingStats) {
-                // Update existing record
+                //? Aggiorna il record esistente
                 console.log(`Updating existing stats record ID: ${existingStats.id}`);
                 await db.vehicleStats.update({
                     where: {
@@ -128,7 +120,7 @@ export async function POST(req: Request) {
                 });
                 console.log("Existing stats record updated successfully");
             } else {
-                // Create new record
+                //? Crea un nuovo record stats
                 console.log("Creating new stats record");
                 const newStats = await db.vehicleStats.create({
                     data: {
@@ -142,14 +134,12 @@ export async function POST(req: Request) {
                 console.log(`New stats record created with ID: ${newStats?.id || 'unknown'}`);
             }
         } catch (statsError) {
+            //! Errore nella gestione delle stats giornaliere, ma si continua comunque
             console.error("Error handling vehicle stats:", statsError);
             console.error("Error details:", JSON.stringify(statsError, null, 2));
-            
-            // Continue execution despite stats error
-            // This allows the vehicle totals to be updated even if stats fail
         }
 
-        // Log the operation for debugging
+        //? Log finale dell'operazione
         console.log(`Updated stats for vehicle ${vehicle.id} on date ${statsDate.toISOString().split('T')[0]}`);
 
         return NextResponse.json({
@@ -158,14 +148,14 @@ export async function POST(req: Request) {
         });
 
     } catch (error) {
-        // More detailed error logging
+        //! Gestione errori generici e di validazione
         console.error("Vehicle stats update error:", error);
         if (error instanceof Error) {
             console.error("Error message:", error.message);
             console.error("Error stack:", error.stack);
         }
         
-        // Handle Zod validation errors
+        //? Gestione errori di validazione Zod
         if (error instanceof z.ZodError) {
             return NextResponse.json(
                 { success: false, message: error.errors[0].message },
@@ -173,7 +163,7 @@ export async function POST(req: Request) {
             );
         }
         
-        // Handle other errors
+        //? Gestione errori generici
         console.error("Vehicle stats update error:", error);
         return NextResponse.json(
             { success: false, message: "Internal server error" },
